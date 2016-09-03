@@ -7,6 +7,17 @@ use Cake\Event\Event;
 class UsersController extends AppController
 {
 
+    public $paginate = [
+        'limit' => 10,
+    ];
+
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadComponent('Paginator');
+    }
+
+
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
@@ -41,18 +52,10 @@ class UsersController extends AppController
 
         if ($tweets_exist) {
             $tweets = $this->Users->find()
-                ->contain(['Tweets'])
+                ->contain('Tweets')
                 ->where(['username' => $username])
                 ->order(['timestamp' => 'DESC']);
-            $this->set('tweets', $tweets);
-
-            $count = $this->Users->find('all')
-                ->contain(['Tweets'])
-                ->where(['username' => $username]);
-            $this->set('count', $count->count());
-        }
-        else {
-            $this->set('count', 0);
+            $this->set('tweets', $this->paginate($tweets));
         }
     }
 
@@ -131,9 +134,14 @@ class UsersController extends AppController
         } else {
             $hasfollowers = true;
         }
-
         $this->set('hasfollowers', $hasfollowers);
-        $this->set('followers', $followers);
+
+        // create 'get followers' query
+        $followers = $this->Users->find()
+            ->contain(['followed'])
+            ->where(['followed.to_user_id' => $user->id])
+            ->order(['created' => 'DESC']);
+        $this->set('followers', $this->paginate($followers));
     }
 }
 

@@ -10,6 +10,21 @@ use Cake\View\Exception\MissingTemplateException;
 class TweetsController extends AppController
 {
 
+    public $paginate = [
+        'limit' => 10,
+        'contain' => 'Users',
+        'order' => [
+            'timestamp' => 'DESC'
+        ]
+    ];
+
+
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadComponent('Paginator');
+    }
+
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
@@ -37,11 +52,8 @@ class TweetsController extends AppController
         $this->set('tweets_exist', $tweets_exist);
 
         if ($tweets_exist) {
-            $tweets = $this->Tweets->find('all')
-                ->contain(['Users'])
-                ->order(['timestamp' => 'DESC'])
-                ->all();
-            $this->set('tweets', $tweets);
+            $this->set('tweets', $this->paginate());
+        }
         }
     }
 
