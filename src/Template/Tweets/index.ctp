@@ -36,3 +36,7 @@
         <?php print("</table><br />\n"); ?>
     </div>
 </div>
+<?= $this->Paginator->numbers() ?>
+
+<?= $this->Paginator->prev('« Previous') ?>
+<?= $this->Paginator->next('Next »') ?>

@@ -29,5 +29,9 @@
             print("</table><br />\n");
         ?>
         <?php endif; ?>
+        <?= $this->Paginator->numbers() ?>
     </div>
+    <?= $this->Paginator->prev('« Previous') ?>
+    <?= $this->Paginator->next('Next »') ?>
 </div>
+

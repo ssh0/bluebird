@@ -19,6 +19,10 @@
                 ]); ?>
             <?php endforeach ?>
             <?php print("</table><br />\n"); ?>
+            <?= $this->Paginator->numbers() ?>
         <?php endif ?>
+    <?= $this->Paginator->prev('« Previous') ?>
+    <?= $this->Paginator->next('Next »') ?>
     </div>
 </div>
+
