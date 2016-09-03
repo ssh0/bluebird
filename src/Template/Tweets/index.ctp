@@ -1,5 +1,5 @@
 <div id="content">
-    <div class="row">
+    <?php if (! $auth_user == null): ?>
         <div class="row">
             <?= $this->Form->create(null, [
                 'url' => [
@@ -16,8 +16,9 @@
             <?= $this->Form->end() ?>
         </div>
         <hr/>
+    <?php endif; ?>
+    <div class="row">
         <?php
-            $auth_user = $this->request->session()->read('Auth.User');
             echo PHP_EOL, '<table cellpadding="0" cellspacing="0" class="db-table">', PHP_EOL;
             echo $this->Html->tableHeaders(['Username', 'Content', 'Timestamp', 'delete']);
         ?>

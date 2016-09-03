@@ -55,11 +55,11 @@ $cakeDescription = 'Bluebird - twitter like toy app';
                     $auth_user = $this->request->session()->read('Auth.User');
                 ?>
                 <?php if ($auth_user == null): ?>
-                <li><?php echo $this->Html->link(
-                    'ユーザ登録', [
-                        'controller' => 'Users',
-                        'action' => 'add',
-                    ]); ?></li>
+                    <li><?php echo $this->Html->link(
+                        'ユーザ登録', [
+                            'controller' => 'Users',
+                            'action' => 'add',
+                        ]); ?></li>
                     <li><?php echo $this->Html->link(
                     'ログイン', [
                         'controller' => 'Users',
@@ -85,7 +85,6 @@ $cakeDescription = 'Bluebird - twitter like toy app';
                 <?php endif; ?>
             </ul>
         </div>
-
     </nav>
     <!-- <div id="side-nav"> -->
     <!--     <ul class="Profile"> -->
@@ -100,8 +99,6 @@ $cakeDescription = 'Bluebird - twitter like toy app';
     <!--     </ul>   -->
     <!-- </div>   -->
 
-    <?php if ($auth_user !== null): ?>
-    <?php endif; ?>
     <?= $this->Flash->render() ?>
     <div class="container clearfix">
         <?= $this->fetch('content') ?>

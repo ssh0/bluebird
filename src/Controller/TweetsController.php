@@ -33,6 +33,9 @@ class TweetsController extends AppController
 
     public function index()
     {
+        $auth_user = $this->request->session()->read('Auth.User');
+        $this->set('auth_user', $auth_user);
+
         $tweets_check = $this->Tweets->find()
             ->contain(['Users'])
             ->first();

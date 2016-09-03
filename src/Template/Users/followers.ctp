@@ -5,9 +5,8 @@
         <?php else: ?>
         <?php
             echo PHP_EOL, '<table cellpadding="0" cellspacing="0" class="db-table">', PHP_EOL;
-            echo $this->Html->tableHeaders(['Name', 'Last login']);
+            echo $this->Html->tableHeaders(['Name', 'Created']);
             foreach ($followers as $follower) {
-                $user_id = $follower->id;
                 $username = $follower->username;
                 $fullname = $follower->fullname;
                 /* 日本時間で表示 */
@@ -18,7 +17,11 @@
                 /* ]); */
                 /* $created = 'dummy'; */
                 echo $this->Html->tableCells([
-                    ["$user_id: $fullname <a href=\"../users/$username\">@$username</a>",
+                    ["$fullname" . $this->Html->link('@' . $username, [
+                        'controller' => 'Users',
+                        'action' => 'view',
+                        $username
+                    ]),
                     "$created"]
                 ]);
             }

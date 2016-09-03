@@ -7,6 +7,7 @@ $content = nl2br($this->Text->autoLink($content));
 $created = $timestamp->timeAgoInWords([
     'accuracy' => 'minute'
 ]);
+
 if ($auth_user['username'] == $username) {
     $remove_button = $this->Form->create(null, [
         'url' => [
@@ -14,8 +15,8 @@ if ($auth_user['username'] == $username) {
             'action' => 'remove',
             $tweet_id
             ],
-        'onsubmit' => 'return confirm(
-            "ツイートを削除してもよろしいですか?"
+            'onsubmit' => 'return confirm(
+                "このツイートを削除してもよろしいですか?"
             )'
         ]) . $this->Form->submit('trash-16.png', [
             'alt' => 'ツイートを削除'
@@ -36,4 +37,4 @@ echo $this->Html->tableCells([
         "$remove_button"
     ]
 ]);
-        ?>
+
