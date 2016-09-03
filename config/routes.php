@@ -65,8 +65,8 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/logout', ['controller' => 'Users', 'action' => 'logout']);
     $routes->connect('/register', ['controller' => 'Users', 'action' => 'add']);
     $routes->connect('/addsuccess', ['controller' => 'Users', 'action' => 'addsuccess']);
-    $routes->connect('/following', ['controller' => 'Follows', 'action' => 'following']);
-    $routes->connect('/followers', ['controller' => 'Users', 'action' => 'followers']);
+    $routes->connect('/following/*', ['controller' => 'Users', 'action' => 'following']);
+    $routes->connect('/followers/*', ['controller' => 'Users', 'action' => 'followers']);
 
     /**
      * Connect catchall routes for all controllers.
