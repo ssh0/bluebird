@@ -115,19 +115,24 @@ class UsersController extends AppController
     /**
      * Followers
      */
-    public function followers()
+    public function followers($username)
     {
-        $user = $this->Auth->user();
+        // get user
+        $user = $this->Users->find()
+            ->where(['Users.username' => $username])
+            ->first();
 
-        $followers = $this->Users->find()
-            ->contain(['Follows'])
-            ->where(['Follows.to' => $user['id']])
-            ->order(['Users.created' => 'DESC']);
+        if ($user == null) {
+            $this->Flash->error(__('存在しないユーザ名です。'));
+            return $this->redirect([
+                'controller' => 'Tweets',
+                'action' => 'index'
+            ]);
+        }
 
         $followers_check = $this->Users->find()
-            ->contain(['Follows'])
-            ->where(['Follows.to' => $user['id']])
-            ->order(['Users.created' => 'DESC']);
+            ->contain(['followed'])
+            ->where(['followed.to_user_id' => $user->id]);
 
         if ($followers_check->first() == null) {
             $hasfollowers = false;
@@ -142,6 +147,43 @@ class UsersController extends AppController
             ->where(['followed.to_user_id' => $user->id])
             ->order(['created' => 'DESC']);
         $this->set('followers', $this->paginate($followers));
+    }
+
+    /**
+     * Following
+     */
+    public function following($username)
+    {
+        // get user
+        $user = $this->Users->find()
+            ->where(['Users.username' => $username])
+            ->first();
+
+        if ($user == null) {
+            $this->Flash->error(__('存在しないユーザ名です。'));
+            return $this->redirect([
+                'controller' => 'Tweets',
+                'action' => 'index'
+            ]);
+        }
+
+        $followings_check = $this->Users->find()
+            ->contain(['following'])
+            ->where(['following.from_user_id' => $user->id]);
+
+        if ($followings_check->first() == null) {
+            $hasfollowings = false;
+        } else {
+            $hasfollowings = true;
+        }
+        $this->set('hasfollowings', $hasfollowings);
+
+        // create 'get followers' query
+        $followings = $this->Users->find()
+            ->contain(['following'])
+            ->where(['following.from_user_id' => $user->id])
+            ->order(['created' => 'DESC']);
+        $this->set('followings', $this->paginate($followings));
     }
 }
 

@@ -11,8 +11,14 @@ class FollowsTable extends Table
      */
     public function initialize(array $config)
     {
-        $this->belongsTo('Users', [
-            'foreignKey' => 'to',
+        $this->belongsTo('from_user', [
+            'className' => 'Users',
+            'foreignKey' => 'from_user_id',
+            'bindingKey' => 'id'
+        ]);
+        $this->belongsTo('to_user', [
+            'className' => 'Users',
+            'foreignKey' => 'to_user_id',
             'bindingKey' => 'id'
         ]);
     }

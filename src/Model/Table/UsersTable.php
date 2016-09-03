@@ -19,14 +19,23 @@ class UsersTable extends Table
             'bindingKey' => 'user_id'
         ]);
 
-        /* $this->hasMany('Follows',[ */
-        /*     'foreignKey' => 'from', */
-        /*     'bindingKey' => 'id' */
-        /* ]); */
-
-        $this->belongsTo('Follows',[
+        $this->hasMany('follows_from',[
+            'className' => 'Follows',
+            'foreignKey' => 'from_user_id',
+        ]);
+        $this->hasMany('follows_to',[
+            'className' => 'Follows',
+            'foreignKey' => 'to_user_id',
+        ]);
+        $this->belongsTo('followed',[
+            'className' => 'Follows',
             'foreignKey' => 'id',
-            'bindingKey' => 'from'
+            'bindingKey' => 'from_user_id'
+        ]);
+        $this->belongsTo('following',[
+            'className' => 'Follows',
+            'foreignKey' => 'id',
+            'bindingKey' => 'to_user_id'
         ]);
     }
 
