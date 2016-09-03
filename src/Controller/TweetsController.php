@@ -31,20 +31,13 @@ class TweetsController extends AppController
         $this->Auth->allow('index');
     }
 
-    /**
-     * Displays a view
-     *
-     * @return void|\Cake\Network\Response
-     * @throws \Cake\Network\Exception\NotFoundException When the view file could not
-     *   be found or \Cake\View\Exception\MissingTemplateException in debug mode.
-     */
     public function index()
     {
-        $tweets_ = $this->Tweets->find()
+        $tweets_check = $this->Tweets->find()
             ->contain(['Users'])
             ->first();
 
-        if ($tweets_ == null) {
+        if ($tweets_check == null) {
             $tweets_exist = false;
         } else {
             $tweets_exist = true;

@@ -29,21 +29,27 @@ class UsersController extends AppController
      */
     public function index()
     {
-        $username = $this->Auth->user('username');
+        $username = $this->request->session()->read('Auth.User');
+        if (! $username == null) {
+            return $this->redirect([
+                'controll' => 'Users',
+                'action' => 'view',
+                $username['username']
+            ]);
+        }
         return $this->redirect([
-            'controll' => 'Users',
-            'action' => 'view',
-            $username
+            'controll' => 'Tweets',
+            'action' => 'index'
         ]);
     }
 
     public function view($username)
     {
-        $tweets_ = $this->Users->find()
+        $tweets_check = $this->Users->find()
             ->contain(['Tweets'])
             ->where(['username' => $username])
             ->first();
-        if ($tweets_ == null) {
+        if ($tweets_check->tweet == null) {
             $tweets_exist = false;
         } else {
             $tweets_exist = true;
