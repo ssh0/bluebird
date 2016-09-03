@@ -1,5 +1,6 @@
 <div id="content">
     <?php if (! $auth_user == null): ?>
+    <?= $this->element('sidebar-profile'); ?>
         <div class="row">
             <?= $this->Form->create(null, [
                 'url' => [

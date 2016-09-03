@@ -10,6 +10,7 @@ use Cake\View\Exception\MissingTemplateException;
 class TweetsController extends AppController
 {
 
+    public $components = ['SidebarProfile'];
     public $paginate = [
         'limit' => 10,
         'contain' => 'Users',
@@ -50,6 +51,18 @@ class TweetsController extends AppController
         if ($tweets_exist) {
             $this->set('tweets', $this->paginate());
         }
+
+        if (! $auth_user == null) {
+            $tweets_num = $this->SidebarProfile->getTweetsNum($auth_user['username']);
+            $followings_num = $this->SidebarProfile->getFollowingsNum($auth_user['username']);
+            $followers_num = $this->SidebarProfile->getFollowersNum($auth_user['username']);
+            $this->set([
+                'fullname' => $auth_user['fullname'],
+                'username' => $auth_user['username'],
+                'tweets_num' => (string) $tweets_num,
+                'followings_num' => (string) $followings_num,
+                'followers_num'=> (string) $followers_num
+            ]);
         }
     }
 

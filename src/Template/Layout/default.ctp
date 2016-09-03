@@ -86,18 +86,6 @@ $cakeDescription = 'Bluebird - twitter like toy app';
             </ul>
         </div>
     </nav>
-    <!-- <div id="side-nav"> -->
-    <!--     <ul class="Profile"> -->
-    <!--         <li><a href="../users"><?= h($auth_user['fullname']) ?></a></li>   -->
-    <!--         <li><a href="../users">@<?= h($auth_user['username']) ?></a></li>   -->
-    <!--         ツイート -->
-    <!--         <li><a href="../users">(ツイート数)</a></li>   -->
-    <!--         フォロー -->
-    <!--         <li><a href="../following">(フォロー数)</a></li>   -->
-    <!--         フォロワー -->
-    <!--         <li><a href="../followers">(フォロワー数)</a></li>   -->
-    <!--     </ul>   -->
-    <!-- </div>   -->
 
     <?= $this->Flash->render() ?>
     <div class="container clearfix">

@@ -7,6 +7,7 @@ use Cake\Event\Event;
 class UsersController extends AppController
 {
 
+    public $components = ['SidebarProfile'];
     public $paginate = [
         'limit' => 10,
     ];
@@ -63,6 +64,19 @@ class UsersController extends AppController
                 ->order(['timestamp' => 'DESC']);
             $this->set('tweets', $this->paginate($tweets));
         }
+
+        $tweets_num = $this->SidebarProfile->getTweetsNum($username);
+        $followings_num = $this->SidebarProfile->getFollowingsNum($username);
+        $followers_num = $this->SidebarProfile->getFollowersNum($username);
+        $this->set([
+            'fullname' => $tweets_check['fullname'],
+            'username' => $username,
+            'tweets_num' => (string) $tweets_num,
+            'followings_num' => (string) $followings_num,
+            'followers_num'=> (string) $followers_num
+        ]);
+
+
     }
 
     public function add()
@@ -153,6 +167,18 @@ class UsersController extends AppController
             ->where(['followed.to_user_id' => $user->id])
             ->order(['created' => 'DESC']);
         $this->set('followers', $this->paginate($followers));
+
+        $tweets_num = $this->SidebarProfile->getTweetsNum($username);
+        $followings_num = $this->SidebarProfile->getFollowingsNum($username);
+        $followers_num = $this->SidebarProfile->getFollowersNum($username);
+        $this->set([
+            'fullname' => $user['fullname'],
+            'username' => $username,
+            'tweets_num' => (string) $tweets_num,
+            'followings_num' => (string) $followings_num,
+            'followers_num'=> (string) $followers_num
+        ]);
+
     }
 
     /**
@@ -190,6 +216,17 @@ class UsersController extends AppController
             ->where(['following.from_user_id' => $user->id])
             ->order(['created' => 'DESC']);
         $this->set('followings', $this->paginate($followings));
+
+        $tweets_num = $this->SidebarProfile->getTweetsNum($username);
+        $followings_num = $this->SidebarProfile->getFollowingsNum($username);
+        $followers_num = $this->SidebarProfile->getFollowersNum($username);
+        $this->set([
+            'fullname' => $user['fullname'],
+            'username' => $username,
+            'tweets_num' => (string) $tweets_num,
+            'followings_num' => (string) $followings_num,
+            'followers_num'=> (string) $followers_num
+        ]);
     }
 }
 
