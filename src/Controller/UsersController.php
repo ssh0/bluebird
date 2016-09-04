@@ -23,6 +23,7 @@ class UsersController extends AppController
     {
         parent::beforeFilter($event);
         $this->Auth->allow();
+        $this->Auth->deny(['logout']);
     }
 
     /**
@@ -140,6 +141,7 @@ class UsersController extends AppController
         $auth_user = $this->request->session()->read('Auth.User');
         if ($auth_user !== null && $auth_user['username'] == $username) {
             $this->set('isAuthorized', true);
+            $this->set('auth_user_id', $auth_user['id']);
         } else {
             $this->set('isAuthorized', false);
         }
@@ -170,7 +172,8 @@ class UsersController extends AppController
 
         // create 'get followers' query
         $followers = $this->Users->find()
-            ->contain(['followed'])
+            ->contain(['followed', 'follows_to'])
+            ->distinct(['Users.id'])
             ->where(['followed.to_user_id' => $user->id])
             ->order(['created' => 'DESC']);
         $this->set('followers', $this->paginate($followers));
@@ -197,6 +200,7 @@ class UsersController extends AppController
         $auth_user = $this->request->session()->read('Auth.User');
         if ($auth_user !== null && $auth_user['username'] == $username) {
             $this->set('isAuthorized', true);
+            $this->set('auth_user_id', $auth_user['id']);
         } else {
             $this->set('isAuthorized', false);
         }

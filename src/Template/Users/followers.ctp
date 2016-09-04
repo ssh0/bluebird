@@ -20,21 +20,33 @@
                 /* -> 2016年8月29日 21時42分55秒 */
 
                 // create follow button
-                if ($isAuthorized) {
-                    $follow_button = $this->Form->create(null, [
-                        'url' => [
-                            'controller' => 'Follows',
-                            'action' => 'addFollow',
-                            $follower->id
-                        ],
-                        'onsubmit' => 'return confirm(
-                            "このユーザーをフォローしますか?"
-                        )' 
-                    ]) . $this->Form->submit('plus-16.png', [
-                        'alt' => 'フォロー追加'
-                    ]) . $this->Form->end();
-                } else {
+                if (! $isAuthorized) {
                     $follow_button = '';
+                } else {
+                    foreach ($follower->follows_to as $user_followed) {
+                        if ($user_followed->from_user_id == $auth_user_id) {
+                            $isFollowedAlready = true;
+                            break;
+                        }
+                        $isFollowedAlready = false;
+                    }
+                    if ($isFollowedAlready) {
+                        $follow_button = '既にフォローしています。';
+                    } else {
+                        $follow_button = $this->Form->create(null, [
+                            'url' => [
+                                'controller' => 'Follows',
+                                'action' => 'addFollow',
+                                $follower->id
+                            ],
+                            'onsubmit' => 'return confirm(
+                                "このユーザーをフォローしますか?"
+                            )' 
+                        ]) . $this->Form->submit('plus-16.png', [
+                            'alt' => 'フォロー追加',
+                            'title' => 'フォロー追加'
+                        ]) . $this->Form->end();
+                    }
                 }
 
                 echo $this->Html->tableCells([
