@@ -1,6 +1,6 @@
+<?= $this->element('sidebar-profile'); ?>
 <div id="content">
     <div class="row">
-    <?= $this->element('sidebar-profile'); ?>
         <?php if (! $tweets_exist): ?>
             <h3>ツイートはありません。</h3>
         <?php else: ?>

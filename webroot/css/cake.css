@@ -311,11 +311,32 @@ pre {
     color: #fff;
 }
 
+
+#sidebar-profile {
+    float: left;
+    padding-top: 2em;
+    margin: 0 auto;
+    width: 100%;
+}
+
 #content {
     padding-top: 2em;
     margin: 0 auto;
-    width: 95%;
 }
+
+@media (min-width: 722px) {
+    #sidebar-profile {
+        float: left;
+        padding-top: 2em;
+        margin: 0 auto;
+        width: 200px;
+    }
+    #content {
+        padding-top: 2em;
+        margin-left: 200px;
+    }
+}
+
 
 .checks {
     padding:30px;
@@ -539,6 +560,8 @@ div.message.hidden {
 /* Use 'one true layout' methods to get equal height columns */
 .container {
     overflow: hidden;
+    margin: 0 auto;
+    width: 95%;
     min-height: 92%; /* full height almost always */
 }
 

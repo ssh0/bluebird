@@ -1,6 +1,6 @@
+<?= $this->element('sidebar-profile'); ?>
 <div id="content">
     <div class="row">
-    <?= $this->element('sidebar-profile'); ?>
         <?php if (! $hasfollowings): ?>
             <h3>まだ誰もフォローしていません。</h3>
         <?php else: ?>

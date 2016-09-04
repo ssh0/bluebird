@@ -1,4 +1,4 @@
-<div id="side-nav">
+<div id="sidebar-profile">
     <ul class="Profile">
     <li><?php echo($fullname . '@' . $username); ?></li>
         <li>ツイート<?php echo $this->Html->link(
