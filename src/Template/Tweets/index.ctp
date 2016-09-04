@@ -37,8 +37,9 @@
         <?php endforeach ?>
         <?php print("</table><br />\n"); ?>
     </div>
+    <div class="row">
+        <?= $this->Paginator->numbers() ?>
+        <?= $this->Paginator->prev('« Previous') ?>
+        <?= $this->Paginator->next('Next »') ?>
+    </div>
 </div>
-<?= $this->Paginator->numbers() ?>
-
-<?= $this->Paginator->prev('« Previous') ?>
-<?= $this->Paginator->next('Next »') ?>
