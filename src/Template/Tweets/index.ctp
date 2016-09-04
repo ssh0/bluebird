@@ -38,8 +38,14 @@
         <?php print("</table><br />\n"); ?>
     </div>
     <div class="row">
+        <div id="page_prev">
+        <?= $this->Paginator->prev() ?>
+        </div>
+        <div id="page_next">
+        <?= $this->Paginator->next() ?>
+        </div>
+        <div id="page_nums">
         <?= $this->Paginator->numbers() ?>
-        <?= $this->Paginator->prev('« Previous') ?>
-        <?= $this->Paginator->next('Next »') ?>
+        </div>
     </div>
 </div>

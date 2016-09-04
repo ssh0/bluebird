@@ -52,9 +52,17 @@
             print("</table><br />\n");
         ?>
         <?php endif; ?>
-        <?= $this->Paginator->numbers() ?>
     </div>
-    <?= $this->Paginator->prev('« Previous') ?>
-    <?= $this->Paginator->next('Next »') ?>
+    <div class="row">
+        <div id="page_prev">
+        <?= $this->Paginator->prev() ?>
+        </div>
+        <div id="page_next">
+        <?= $this->Paginator->next() ?>
+        </div>
+        <div id="page_nums">
+        <?= $this->Paginator->numbers() ?>
+        </div>
+    </div>
 </div>
 

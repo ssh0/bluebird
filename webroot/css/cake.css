@@ -598,3 +598,21 @@ div.message.hidden {
     margin-bottom: 10px;
     border-bottom: 0px;
 }
+
+#page_prev {
+    float: left;
+    width: 100px;
+    text-align: left;
+}
+
+#page_next {
+    float: right;
+    width: 100px;
+    text-align: right;
+}
+
+#page_nums {
+    margin: 0 100px;
+    text-align: center;
+}
+
