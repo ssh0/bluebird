@@ -19,7 +19,8 @@ if ($auth_user['username'] == $username) {
                 "このツイートを削除してもよろしいですか?"
             )'
         ]) . $this->Form->submit('trash-16.png', [
-            'alt' => 'ツイートを削除'
+            'alt' => 'ツイートを削除',
+            'title' => 'ツイートを削除'
         ]) . $this->Form->end();
 } else {
     $remove_button = '';

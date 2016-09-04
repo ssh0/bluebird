@@ -31,7 +31,8 @@
                             "このユーザーをフォローから解除しますか?"
                         )' 
                     ]) . $this->Form->submit('hide-16.png', [
-                        'alt' => 'フォロー解除'
+                        'alt' => 'フォロー解除',
+                        'title' => 'フォロー解除'
                     ]) . $this->Form->end();
                 } else {
                     $unfollow_button = '';
