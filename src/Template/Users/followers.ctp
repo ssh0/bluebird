@@ -11,13 +11,14 @@
             foreach ($followers as $follower) {
                 $username = $follower->username;
                 $fullname = $follower->fullname;
-                /* 日本時間で表示 */
-                $created = $follower->created->nice('Asia/Tokyo', 'ja-JP');
-                /* 現在との相対的な時間 */
-                /* $created = $follower->created->timeAgoInWords([ */
-                /*     'accuracy' => 'minute' */
-                /* ]); */
-                /* $created = 'dummy'; */
+                /* 日本時間(日付も表示)で表示 */
+                $created = $follower->created->i18nFormat(
+                    'Y年M月d日 HH時mm分ss秒',
+                    'Asia/Tokyo',
+                    'ja-JP'
+                );
+                /* -> 2016年8月29日 21時42分55秒 */
+
                 // create follow button
                 if ($isAuthorized) {
                     $follow_button = $this->Form->create(null, [

@@ -1,12 +1,12 @@
 <?php
 $content = nl2br($this->Text->autoLink($content));
-/* $created = $tweet->timestamp; */
-/* 日本時間で表示 */
-/* $created = $tweet->timestamp->nice('Asia/Tokyo', 'ja-JP'); */
-/* 現在との相対的な時間 */
-$created = $timestamp->timeAgoInWords([
-    'accuracy' => 'minute'
-]);
+/* 日本時間(日付も表示)で表示 */
+$created = $timestamp->i18nFormat(
+    'Y年M月d日 HH時mm分ss秒',
+    'Asia/Tokyo',
+    'ja-JP'
+);
+/* -> 2016年8月29日 21時42分55秒 */
 
 if ($auth_user['username'] == $username) {
     $remove_button = $this->Form->create(null, [
@@ -37,4 +37,3 @@ echo $this->Html->tableCells([
         "$remove_button"
     ]
 ]);
-
