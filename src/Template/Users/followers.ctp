@@ -4,9 +4,10 @@
         <?php if (! $hasfollowers): ?>
             <h3>まだフォロワーはいません。</h3>
         <?php else: ?>
+            <h3><?= h($fullname) ?>は<?= $followers_num ?>人にフォローされています。</h3>
         <?php
             echo PHP_EOL, '<table cellpadding="0" cellspacing="0" class="db-table">', PHP_EOL;
-            echo $this->Html->tableHeaders(['Name', 'Created']);
+            echo $this->Html->tableHeaders(['Name', 'Created', '']);
             foreach ($followers as $follower) {
                 $username = $follower->username;
                 $fullname = $follower->fullname;
@@ -17,13 +18,34 @@
                 /*     'accuracy' => 'minute' */
                 /* ]); */
                 /* $created = 'dummy'; */
+                // create follow button
+                if ($isAuthorized) {
+                    $follow_button = $this->Form->create(null, [
+                        'url' => [
+                            'controller' => 'Follows',
+                            'action' => 'addFollow',
+                            $follower->id
+                        ],
+                        'onsubmit' => 'return confirm(
+                            "このユーザーをフォローしますか?"
+                        )' 
+                    ]) . $this->Form->submit('plus-16.png', [
+                        'alt' => 'フォロー追加'
+                    ]) . $this->Form->end();
+                } else {
+                    $follow_button = '';
+                }
+
                 echo $this->Html->tableCells([
-                    ["$fullname" . $this->Html->link('@' . $username, [
-                        'controller' => 'Users',
-                        'action' => 'view',
-                        $username
-                    ]),
-                    "$created"]
+                    [
+                        $fullname . $this->Html->link('@' . $username, [
+                            'controller' => 'Users',
+                            'action' => 'view',
+                            $username
+                        ]),
+                        $created,
+                        $follow_button
+                    ]
                 ]);
             }
             print("</table><br />\n");

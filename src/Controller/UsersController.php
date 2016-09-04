@@ -137,6 +137,13 @@ class UsersController extends AppController
      */
     public function followers($username)
     {
+        $auth_user = $this->request->session()->read('Auth.User');
+        if ($auth_user !== null && $auth_user['username'] == $username) {
+            $this->set('isAuthorized', true);
+        } else {
+            $this->set('isAuthorized', false);
+        }
+
         // get user
         $user = $this->Users->find()
             ->where(['Users.username' => $username])
@@ -172,6 +179,7 @@ class UsersController extends AppController
         $followings_num = $this->SidebarProfile->getFollowingsNum($username);
         $followers_num = $this->SidebarProfile->getFollowersNum($username);
         $this->set([
+            'user_id' => $user->id,
             'fullname' => $user['fullname'],
             'username' => $username,
             'tweets_num' => (string) $tweets_num,
@@ -186,6 +194,13 @@ class UsersController extends AppController
      */
     public function following($username)
     {
+        $auth_user = $this->request->session()->read('Auth.User');
+        if ($auth_user !== null && $auth_user['username'] == $username) {
+            $this->set('isAuthorized', true);
+        } else {
+            $this->set('isAuthorized', false);
+        }
+
         // get user
         $user = $this->Users->find()
             ->where(['Users.username' => $username])
@@ -221,6 +236,7 @@ class UsersController extends AppController
         $followings_num = $this->SidebarProfile->getFollowingsNum($username);
         $followers_num = $this->SidebarProfile->getFollowersNum($username);
         $this->set([
+            'user_id' => $user->id,
             'fullname' => $user['fullname'],
             'username' => $username,
             'tweets_num' => (string) $tweets_num,

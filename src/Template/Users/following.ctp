@@ -4,9 +4,10 @@
         <?php if (! $hasfollowings): ?>
             <h3>まだ誰もフォローしていません。</h3>
         <?php else: ?>
+            <h3><?= h($fullname) ?>は<?= $followings_num ?>人をフォローしています。</h3>
         <?php
             echo PHP_EOL, '<table cellpadding="0" cellspacing="0" class="db-table">', PHP_EOL;
-            echo $this->Html->tableHeaders(['Name', 'Last login']);
+            echo $this->Html->tableHeaders(['Name', 'Created', '']);
             foreach ($followings as $following) {
                 $username = $following->username;
                 $fullname = $following->fullname;
@@ -16,13 +17,34 @@
                 /* $created = $following->created->timeAgoInWords([ */
                 /*     'accuracy' => 'minute' */
                 /* ]); */
+                // create unfollow button
+                if ($isAuthorized) {
+                    $unfollow_button = $this->Form->create(null, [
+                        'url' => [
+                            'controller' => 'Follows',
+                            'action' => 'unfollow',
+                            $following->id
+                        ],
+                        'onsubmit' => 'return confirm(
+                            "このユーザーをフォローから解除しますか?"
+                        )' 
+                    ]) . $this->Form->submit('hide-16.png', [
+                        'alt' => 'フォロー解除'
+                    ]) . $this->Form->end();
+                } else {
+                    $unfollow_button = '';
+                }
+
                 echo $this->Html->tableCells([
-                    ["$fullname" . $this->Html->link('@' . $username, [
-                        'controller' => 'Users',
-                        'action' => 'view',
-                        $username
-                    ]),
-                    "$created"]
+                    [
+                        $fullname . $this->Html->link('@' . $username, [
+                            'controller' => 'Users',
+                            'action' => 'view',
+                            $username
+                        ]),
+                        $created,
+                        $unfollow_button
+                    ]
                 ]);
             }
             print("</table><br />\n");
