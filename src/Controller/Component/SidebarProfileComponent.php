@@ -87,13 +87,5 @@ class SidebarProfileComponent extends Component
             ->where(['followed.to_user_id' => $user->id]);
         return $followers_num->count();
     }
-
-    public function create()
-    {
-    
-    
-    }
 }
 
-
-?>
