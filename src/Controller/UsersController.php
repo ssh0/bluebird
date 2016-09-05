@@ -248,5 +248,83 @@ class UsersController extends AppController
             'followers_num'=> (string) $followers_num
         ]);
     }
+
+    /*
+     * Seach users
+     */
+    public function search()
+    {
+        if ($this->request->is('post')) {
+            $search_query = $this->request->data['search_query'];
+            if ($search_query == '') {
+                $search_query = '_ALL';
+            }
+            return $this->redirect([
+                'controller' => 'Users',
+                'action' => 'results',
+                $search_query
+            ]);
+        }
+    }
+
+    /*
+     * Show the search results
+     */
+    public function results($search_query)
+    {
+        $auth_user = $this->request->session()->read('Auth.User');
+        if ($auth_user !== null) {
+            $this->set('isAuthorized', true);
+            $this->set('auth_user_id', $auth_user['id']);
+        } else {
+            $this->set('isAuthorized', false);
+        }
+
+        // 空文字の時の処理
+        if ($search_query == '_ALL') {
+            $user = $this->Users->find()->first();
+
+            if ($user == null) {
+                $this->set('hasResults', false);
+                return null;
+            } else {
+                $this->set('hasResults', true);
+                $results = $this->Users->find()
+                    ->contain(['followed', 'follows_to'])
+                    ->distinct(['Users.id'])
+                    ->order(['created' => 'DESC']);
+
+                $this->set('search_query', $search_query);
+                $this->set('results', $this->paginate($results));
+            }
+            return null;
+        }
+
+        // get user
+        $user = $this->Users->find()
+            ->where(['OR' => [
+                'Users.username LIKE' => '%' . $search_query . '%',
+                'Users.fullname LIKE' => '%' . $search_query . '%',
+            ]])
+            ->first();
+
+        if ($user == null) {
+            $this->set('hasResults', false);
+            return $this->redirect($this->referer());
+        } else {
+            $this->set('hasResults', true);
+            $results = $this->Users->find()
+                ->contain(['followed', 'follows_to'])
+                ->distinct(['Users.id'])
+                ->where(['OR' => [
+                    'Users.username LIKE' => '%' . $search_query . '%',
+                    'Users.fullname LIKE' => '%' . $search_query . '%',
+                ]])
+                ->order(['created' => 'DESC']);
+
+            $this->set('search_query', $search_query);
+            $this->set('results', $this->paginate($results));
+        }
+    }
 }
 

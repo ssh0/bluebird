@@ -74,7 +74,7 @@ $cakeDescription = 'Bluebird - twitter like toy app';
                         ]); ?></li>
                     <li><?php echo $this->Html->link(
                        '友達を検索', [
-                            'controller' => 'Follows',
+                            'controller' => 'Users',
                             'action' => 'search',
                         ]); ?></li>
                     <li><?php echo $this->Html->link(

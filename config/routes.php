@@ -50,6 +50,8 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/login', ['controller' => 'Users', 'action' => 'login']);
     $routes->connect('/logout', ['controller' => 'Users', 'action' => 'logout']);
     $routes->connect('/register', ['controller' => 'Users', 'action' => 'add']);
+    $routes->connect('/search', ['controller' => 'Users', 'action' => 'search']);
+    $routes->connect('/results/*', ['controller' => 'Users', 'action' => 'results']);
     $routes->connect('/addsuccess', ['controller' => 'Pages', 'action' => 'addsuccess']);
     $routes->connect('/following/*', ['controller' => 'Users', 'action' => 'following']);
     $routes->connect('/followers/*', ['controller' => 'Users', 'action' => 'followers']);

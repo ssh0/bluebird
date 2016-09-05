@@ -337,6 +337,11 @@ pre {
     }
 }
 
+#content-full {
+    padding-top: 2em;
+    margin: 0 auto;
+}
+
 
 .checks {
     padding:30px;
