@@ -698,3 +698,58 @@ div.message.hidden {
 .cl {
     clear: both;
 }
+
+
+.tweets {
+    width: 100%;
+    min-width: 200px;
+    margin: 0 auto;
+}
+
+@media (min-width: 880px) {
+    .tweets {
+        width: 600px;
+    }
+}
+
+.tweet {
+    padding: 20px;
+    max-width: 100%;
+    margin: 0 5px 30px 5px;
+    background-color:#fff;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #ccc;
+    box-shadow: 0 1px 6px #ccc;
+}
+
+.tweet-name {
+    float: left;
+}
+
+.tweet-fullname {
+    color: #303030;
+    float: left;
+    font-weight: bold;
+}
+
+.tweet-username {
+    color: #909090;
+    float: left;
+}
+
+.tweet-created {
+    color: #909090;
+    float: right;
+    font-size: x-small;
+}
+
+.tweet-content {
+    word-wrap: break-word;
+}
+
+.tweet-removebutton {
+    float: right;
+    margin: -10px -10px 0 0;
+}
+

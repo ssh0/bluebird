@@ -6,6 +6,7 @@
 <?php endif; ?>
     <?php if (! $auth_user == null): ?>
         <div class="row">
+        <div class="tweets">
             <?= $this->Form->create(null, [
                 'url' => [
                     'controller' => 'Tweets',
@@ -20,13 +21,10 @@
             <?= $this->Form->button(__('投稿する')); ?>
             <?= $this->Form->end() ?>
         </div>
-        <hr/>
+        </div>
     <?php endif; ?>
     <div class="row">
-        <?php
-            echo PHP_EOL, '<table cellpadding="0" cellspacing="0" class="db-table">', PHP_EOL;
-            echo $this->Html->tableHeaders(['Username', 'Content', 'Timestamp', 'delete']);
-        ?>
+    <div class="tweets">
         <?php foreach ($tweets as $tweet): ?>
         <?= $this->element('tweets', [
             'auth_user' => $auth_user,
@@ -37,7 +35,7 @@
             'timestamp' => $tweet->timestamp
         ]); ?>
         <?php endforeach ?>
-        <?php print("</table><br />\n"); ?>
+    </div>
     </div>
     <div class="row">
         <div id="page_prev">

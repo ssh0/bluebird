@@ -1,14 +1,12 @@
 <?php if ($user_exist): ?>
-<?= $this->element('sidebar-profile'); ?>
+    <?= $this->element('sidebar-profile'); ?>
 <div id="content">
     <div class="row">
         <?php if (! $tweets_exist): ?>
             <h3>ツイートはありません。</h3>
         <?php else: ?>
-            <?php
-                $auth_user = $this->request->session()->read('Auth.User');
-                echo PHP_EOL, '<table cellpadding="0" cellspacing="0" class="db-table">', PHP_EOL;
-                echo $this->Html->tableHeaders(['Username', 'Content', 'Timestamp', 'delete']); ?>
+            <?php $auth_user = $this->request->session()->read('Auth.User'); ?>
+            <div class="tweets">
             <?php foreach ($tweets as $tweet): ?>
                 <?= $this->element('tweets', [
                     'auth_user' => $auth_user,
@@ -19,7 +17,7 @@
                     'timestamp' => $tweet->tweet->timestamp
                 ]); ?>
             <?php endforeach ?>
-        <?php print("</table><br />\n"); ?>
+            </div>
         <?php endif ?>
     </div>
     <div class="row">

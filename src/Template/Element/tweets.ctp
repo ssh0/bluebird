@@ -1,3 +1,4 @@
+<div class="tweet">
 <?php
 $content = nl2br($this->Text->autoLink($content));
 /* 日本時間(日付も表示)で表示 */
@@ -26,15 +27,18 @@ if ($auth_user['username'] == $username) {
     $remove_button = '';
 }
 
-echo $this->Html->tableCells([
-    [
-        "$fullname " . $this->Html->link('@' . $username, [
-            'controller' => 'Users',
-            'action' => 'view',
-            $username
-        ]),
-        ["$content", ['style' => 'word-wrap:break-word;']],
-        "$created",
-        "$remove_button"
-    ]
-]);
+?>
+<div class="tweet-name">
+    <div class="tweet-fullname"><?= h($fullname) ?></div>
+    <div class="tweet-username"><?php echo $this->Html->link(
+    '@' . $username, [
+        'controller' => 'Users',
+        'action' => 'view',
+        $username
+    ]); ?></div>
+</div>
+<div class="tweet-created"><?php echo $created; ?></div>
+<div class="cl"></div>
+<div class="tweet-content"><?php echo $content; ?></div>
+<div class="tweet-removebutton"><?php echo $remove_button; ?></div>
+</div>
