@@ -6,6 +6,16 @@
 
 * [画面仕様書](http://team-lab.github.io/skillup/docs/ui.xls)に従う
 
+| 画面                 | 主な機能                                               |
+|:---------------------|:-------------------------------------------------------|
+| ヘッダー             | リンク表示 (ログインしているかどうかで表示を変化)      |
+| ユーザ登録           | ユーザ登録入力をさせる。入力チェック(Validation)       |
+| ユーザ登録完了       | ユーザ登録処理                                         |
+| ログイン・ログアウト | ユーザのログイン・ログアウト機能                       |
+| つぶやき画面         | 自分のつぶやき一覧表示，つぶやき登録，削除機能         |
+| フォロー者一覧       | 自分がフォローしているユーザの一覧表示，登録，削除機能 |
+| ユーザ検索           | ユーザの検索，自分のフォローに登録                     |
+
 
 **製作環境**
 
@@ -30,6 +40,56 @@ mysql  Ver 14.14 Distrib 5.5.50, for debian-linux-gnu (x86_64) using readline 6.
 ```
 $ bin/cake --version
 3.3.2
+```
+
+**テーブルの構造**
+
+_users_
+
+```
+>mysql show columns from users;
++------------+------------------+------+-----+---------------------+----------------+
+| Field      | Type             | Null | Key | Default             | Extra          |
++------------+------------------+------+-----+---------------------+----------------+
+| id         | int(10) unsigned | NO   | PRI | NULL                | auto_increment |
+| username   | char(20)         | NO   | UNI | NULL                |                |
+| fullname   | char(20)         | NO   |     | NULL                |                |
+| mail       | char(100)        | NO   |     | NULL                |                |
+| password   | varchar(255)     | NO   |     | NULL                |                |
+| is_public  | tinyint(1)       | NO   |     | 1                   |                |
+| created    | timestamp        | NO   |     | CURRENT_TIMESTAMP   |                |
+| last_login | timestamp        | NO   |     | 0000-00-00 00:00:00 |                |
++------------+------------------+------+-----+---------------------+----------------+
+8 rows in set (0.00 sec)
+```
+
+_follows_
+
+```
+>mysql show columns from follows;
++--------------+------------------+------+-----+---------+----------------+
+| Field        | Type             | Null | Key | Default | Extra          |
++--------------+------------------+------+-----+---------+----------------+
+| id           | int(10) unsigned | NO   | PRI | NULL    | auto_increment |
+| from_user_id | int(11)          | NO   |     | NULL    |                |
+| to_user_id   | int(11)          | NO   |     | NULL    |                |
++--------------+------------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+```
+
+_tweets_
+
+```
+mysql> show columns from tweets;
++-----------+------------------+------+-----+-------------------+----------------+
+| Field     | Type             | Null | Key | Default           | Extra          |
++-----------+------------------+------+-----+-------------------+----------------+
+| id        | int(10) unsigned | NO   | PRI | NULL              | auto_increment |
+| user_id   | int(11)          | NO   |     | NULL              |                |
+| content   | char(140)        | NO   |     | NULL              |                |
+| timestamp | timestamp        | NO   |     | CURRENT_TIMESTAMP |                |
++-----------+------------------+------+-----+-------------------+----------------+
+4 rows in set (0.00 sec)
 ```
 
 # 本番環境でのセットアップ
