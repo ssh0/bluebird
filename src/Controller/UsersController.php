@@ -47,6 +47,20 @@ class UsersController extends AppController
 
     public function view($username)
     {
+        $user_check = $this->Users->find()
+            ->where(['username' => $username])
+            ->first();
+        if ($user_check == null) {
+            $user_exist = false;
+        } else {
+            $user_exist = true;
+        }
+        $this->set('user_exist', $user_exist);
+
+        if (! $user_exist) {
+            return;
+        }
+
         $tweets_check = $this->Users->find()
             ->contain(['Tweets'])
             ->where(['username' => $username])
@@ -76,7 +90,6 @@ class UsersController extends AppController
             'followings_num' => (string) $followings_num,
             'followers_num'=> (string) $followers_num
         ]);
-
 
     }
 

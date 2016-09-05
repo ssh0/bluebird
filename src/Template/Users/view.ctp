@@ -1,3 +1,4 @@
+<?php if ($user_exist): ?>
 <?= $this->element('sidebar-profile'); ?>
 <div id="content">
     <div class="row">
@@ -33,4 +34,8 @@
         </div>
     </div>
 </div>
-
+<?php else: ?>
+<div id="content-full">
+    <h3>存在しないユーザ名です。</h3>
+</div>
+<?php endif; ?>

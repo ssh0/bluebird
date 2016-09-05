@@ -23,12 +23,12 @@
                 if (! $isAuthorized) {
                     $follow_button = '';
                 } else {
+                    $isFollowedAlready = false;
                     foreach ($follower->follows_to as $user_followed) {
                         if ($user_followed->from_user_id == $auth_user_id) {
                             $isFollowedAlready = true;
                             break;
                         }
-                        $isFollowedAlready = false;
                     }
                     if ($isFollowedAlready) {
                         $follow_button = '既にフォローしています。';
