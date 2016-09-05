@@ -1,7 +1,9 @@
 <?php if (! $auth_user == null): ?>
     <?= $this->element('sidebar-profile'); ?>
+    <div id="content">
+<?php else: ?>
+    <div id="content-full">
 <?php endif; ?>
-<div id="content">
     <?php if (! $auth_user == null): ?>
         <div class="row">
             <?= $this->Form->create(null, [

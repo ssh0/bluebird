@@ -313,10 +313,17 @@ pre {
 
 
 #sidebar-profile {
-    float: left;
-    padding-top: 2em;
-    margin: 0 auto;
+    float: center;
+    margin-top: 1em;
+    padding: 10px;
     width: 100%;
+    min-width: 200px;
+    background-color:#fff;
+    border-radius:5px;
+    border-style:solid;
+    border-width:1px;
+    border-color:#ccc;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);
 }
 
 #content {
@@ -327,13 +334,13 @@ pre {
 @media (min-width: 722px) {
     #sidebar-profile {
         float: left;
-        padding-top: 2em;
-        margin: 0 auto;
+        margin-top: 2em;
         width: 200px;
     }
     #content {
         padding-top: 2em;
         margin-left: 200px;
+        padding-left: 20px;
     }
 }
 
@@ -621,3 +628,73 @@ div.message.hidden {
     text-align: center;
 }
 
+#profile-fullname {
+    color: #303030;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    width: 100%;
+}
+
+#profile-username {
+    clear: both;
+    color: #909090;
+    float: left;
+    font-size: 14px;
+}
+
+#profile-tweets {
+    clear: both;
+    color: #303030;
+    float: left;
+    font-size: 11px;
+    margin-top: 14px;
+    text-align: center;
+    width: 54px;
+}
+
+#profile-followers {
+    color: #303030;
+    float: right;
+    font-size: 11px;
+    margin-top: 14px;
+    text-align: center;
+    width: 54px;
+}
+
+#profile-following {
+    color: #303030;
+    font-size: 11px;
+    margin: 14px 58px 0 58px;
+    text-align: center;
+}
+
+#profile-tweets-num {
+    clear: both;
+    color: #303030;
+    float: left;
+    font-size: 20px;
+    margin-top: 5px;
+    text-align: center;
+    width: 54px;
+}
+
+#profile-followers-num {
+    color: #303030;
+    float: right;
+    font-size: 20px;
+    margin-top: 5px;
+    text-align: center;
+    width: 54px;
+}
+
+#profile-following-num {
+    color: #303030;
+    font-size: 20px;
+    margin: 5px 58px 0 58px;
+    text-align: center;
+}
+
+.cl {
+    clear: both;
+}

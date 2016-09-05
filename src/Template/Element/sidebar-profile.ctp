@@ -1,23 +1,34 @@
-<div id="sidebar-profile">
-    <ul class="Profile">
-    <li><?php echo($fullname . '@' . $username); ?></li>
-    <li><?= $followings_num ?><?php echo $this->Html->link(
-        'フォローしている', [
-            'controller' => 'Users',
-            'action' => 'following',
-            $username
-        ]); ?></li>
-        <li><?= $followers_num ?><?php echo $this->Html->link(
-        'フォローされている', [
-            'controller' => 'Users',
-            'action' => 'followers',
-            $username
-        ]); ?></li>
-    <li><?php echo $this->Html->link(
-        'つぶやき' . $tweets_num, [
-            'controller' => 'Users',
-            'action' => 'view',
-            $username
-        ]); ?></li>
-    </ul>
-</div>
+<section id="sidebar-profile">
+    <div id="profile-fullname"><?php echo($fullname); ?></div>
+    <div id="profile-username"><?php echo('@' . $username); ?></div>
+    <div class='cl'></div>
+    <div id="profile-tweets">つぶやき</div>
+    <div id="profile-followers">フォロワー</div>
+    <div id="profile-following">フォロー</div>
+
+    <div class='cl'></div>
+    <div id="profile-tweets-num">
+        <?php echo $this->Html->link(
+            $tweets_num, [
+                'controller' => 'Users',
+                'action' => 'view',
+                $username
+            ]); ?>
+    </div>
+    <div id="profile-followers-num">
+        <?php echo $this->Html->link(
+            $followers_num, [
+                'controller' => 'Users',
+                'action' => 'followers',
+                $username
+            ]); ?>
+    </div>
+    <div id="profile-following-num">
+        <?php echo $this->Html->link(
+            $followings_num, [
+                'controller' => 'Users',
+                'action' => 'following',
+                $username
+            ]); ?>
+    </div>
+</section>

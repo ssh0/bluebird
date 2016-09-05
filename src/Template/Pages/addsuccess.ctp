@@ -1,4 +1,4 @@
-<div id="content">
+<div id="content-full">
         <h2>Bluebirdに参加しました。</h2>
         <p><?= $fullname ?>はBluebirdに参加されました。</p>
         <p>ログインをクリックしてログインしつぶやいてください。</p>
