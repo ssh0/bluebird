@@ -47,7 +47,7 @@ $ bin/cake --version
 _users_
 
 ```
->mysql show columns from users;
+mysql> show columns from users;
 +------------+------------------+------+-----+---------------------+----------------+
 | Field      | Type             | Null | Key | Default             | Extra          |
 +------------+------------------+------+-----+---------------------+----------------+
@@ -66,7 +66,7 @@ _users_
 _follows_
 
 ```
->mysql show columns from follows;
+mysql> show columns from follows;
 +--------------+------------------+------+-----+---------+----------------+
 | Field        | Type             | Null | Key | Default | Extra          |
 +--------------+------------------+------+-----+---------+----------------+
