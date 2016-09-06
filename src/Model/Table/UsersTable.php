@@ -68,5 +68,185 @@ class UsersTable extends Table
         ));
         return $rules;
     }
+
+    public function contain($username)
+    {
+        $user = $this->find()
+            ->where(['username' => $username])
+            ->first();
+
+        if ($user !== null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getArrayBy($username)
+    {
+        return $this->find()
+            ->where(['username' => $username])
+            ->first()
+            ->toArray();
+    }
+
+    public function isAuthorized($authUser, $username)
+    {
+        if ($authUser !== null && $authUser['username'] == $username) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function addUser($user, $postedData)
+    {
+        $patched = $this->patchEntity($user, $postedData, [
+            'fieldList' => [
+                'fullname', 'username', 'password', 'mail', 'is_public'
+            ]
+        ]);
+
+        if ($this->save($patched)) {
+            return true;  // success
+        } else {
+            return false;  // fail
+        }
+    }
+
+    public function updateLastLogin($username)
+    {
+        $query = $this->query();
+        $query->update()
+            ->set(['last_login' => date('Y-m-d H:i:s')])
+            ->where(['username' => $username])
+            ->execute();
+    }
+
+    public function hasTweets($username)
+    {
+        $user = $this->find()
+            ->contain(['Tweets'])
+            ->where(['username' => $username])
+            ->first();
+
+        if ($user->tweet !== null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getAllTweets($username)
+    {
+        return $this->find()
+            ->contain('Tweets')
+            ->where(['username' => $username])
+            ->order(['timestamp' => 'DESC']);
+    }
+
+    public function hasFollowings($userId)
+    {
+        $user = $this->find()
+            ->contain(['following'])
+            ->where(['following.from_user_id' => $userId])
+            ->first();
+
+        if ($user !== null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getFollowingsNum($userId)
+    {
+        if ($this->hasFollowings($userId)) {
+            return (string) $this->find()
+                ->contain(['following'])
+                ->where(['following.from_user_id' => $userId])
+                ->count();
+        } else {
+            return '0';
+        }
+    }
+
+    public function getAllFollowings($userId)
+    {
+        return $this->find()
+            ->contain(['following'])
+            ->where(['following.from_user_id' => $userId])
+            ->order(['created' => 'DESC']);
+    }
+
+    public function hasFollowers($userId)
+    {
+        $user = $this->find()
+            ->contain(['followed'])
+            ->where(['followed.to_user_id' => $userId])
+            ->first();
+
+        if ($user !== null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getFollowersNum($userId)
+    {
+        if ($this->hasFollowers($userId)) {
+            return (string) $this->find()
+                ->contain(['followed'])
+                ->where(['followed.to_user_id' => $userId])
+                ->count();
+        } else {
+            return '0';
+        }
+    }
+
+    public function getAllFollowers($userId)
+    {
+        return $this->find()
+            ->contain(['followed', 'follows_to'])
+            ->distinct(['Users.id'])
+            ->where(['followed.to_user_id' => $userId])
+            ->order(['created' => 'DESC']);
+    }
+
+    public function getPartialMatches($query)
+    {
+        $user = $this->find()
+            ->where(['OR' => [
+                'Users.username LIKE' => '%' . $query . '%',
+                'Users.fullname LIKE' => '%' . $query . '%',
+            ]])
+            ->first();
+
+        if ($user !== null) {
+            return $this->find()
+                ->contain(['followed', 'follows_to'])
+                ->distinct(['Users.id'])
+                ->where(['OR' => [
+                    'Users.username LIKE' => '%' . $query . '%',
+                    'Users.fullname LIKE' => '%' . $query . '%',
+                ]])
+                ->order(['created' => 'DESC']);
+        } else {
+            return null;
+        }
+    }
+
+    public function getAllUsersWithRelations()
+    {
+        if ($this->find()->first() !== null) {
+            return $this->find()
+                ->contain(['followed', 'follows_to'])
+                ->distinct(['Users.id'])
+                ->order(['created' => 'DESC']);
+        } else {
+            return null;
+        }
+    }
 }
 

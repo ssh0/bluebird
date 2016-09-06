@@ -17,7 +17,6 @@ class UsersController extends AppController
         $this->loadComponent('Paginator');
     }
 
-
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
@@ -45,67 +44,43 @@ class UsersController extends AppController
 
     public function view($username)
     {
-        $user_check = $this->Users->find()
-            ->where(['username' => $username])
-            ->first();
-        if ($user_check == null) {
-            $user_exist = false;
-        } else {
-            $user_exist = true;
-        }
+        $user_exist = $this->Users->contain($username);
         $this->set('user_exist', $user_exist);
 
-        if (! $user_exist) {
-            return;
+        if ($user_exist) {
+            $user = $this->Users->getArrayBy($username);
+            $tweets_exist = $this->Users->hasTweets($username);
+            $this->set([
+                'tweets_exist' => $tweets_exist,
+                'username' => $user['username'],
+                'fullname' => $user['fullname'],
+            ]);
+
+            if ($tweets_exist) {
+                $this->set(
+                    'tweets',
+                    $this->paginate($this->Users->getAllTweets($username))
+                );
+            }
         }
-
-        $tweets_check = $this->Users->find()
-            ->contain(['Tweets'])
-            ->where(['username' => $username])
-            ->first();
-        if ($tweets_check->tweet == null) {
-            $tweets_exist = false;
-        } else {
-            $tweets_exist = true;
-        }
-        $this->set('tweets_exist', $tweets_exist);
-
-        if ($tweets_exist) {
-            $tweets = $this->Users->find()
-                ->contain('Tweets')
-                ->where(['username' => $username])
-                ->order(['timestamp' => 'DESC']);
-            $this->set('tweets', $this->paginate($tweets));
-        }
-
-        $this->set([
-            'fullname' => $tweets_check['fullname'],
-            'username' => $username,
-        ]);
-
     }
 
     public function add()
     {
         $user = $this->Users->newEntity();
+        $this->set('user', $user);
         if ($this->request->is('post')) {
-            $user = $this->Users->patchEntity($user, $this->request->data, [
-                'fieldList' => [
-                    'fullname', 'username', 'password', 'mail', 'is_public'
-                ]
-            ]);
-            if ($this->Users->save($user)) {
+            if ($this->Users->addUser($user, $this->request->data)) {
                 $this->Flash->success(__('ユーザ登録が完了しました。'));
-                /* $this->Auth->setUser($user); */
                 return $this->redirect([
                     'controller' => 'Pages',
                     'action' => 'addsuccess',
                     $user['fullname']
                 ]);
+            } else {
+                $this->Flash->error(__('ユーザ登録に失敗しました。'));
             }
-            $this->Flash->error(__('ユーザ登録に失敗しました。'));
         }
-        $this->set('user', $user);
     }
 
     /**
@@ -117,17 +92,13 @@ class UsersController extends AppController
             $user = $this->Auth->identify();
             if ($user) {
                 $this->Auth->setUser($user);
-                $id = $this->Auth->user()['id'];
-                $query = $this->Users->query();
-                $query->update()
-                    ->set(['last_login' => date('Y-m-d H:i:s')])
-                    ->where(['id' => $id])
-                    ->execute();
+                $this->Users->updateLastLogin($this->Auth->user()['username']);
                 return $this->redirect($this->Auth->redirectUrl());
             }
             $this->Flash->error(
                 __('入力が正しくありません。もう一度試してください。', [
-                'key' => 'auth'])
+                    'key' => 'auth'
+                ])
             );
         }
     }
@@ -143,52 +114,39 @@ class UsersController extends AppController
      */
     public function followers($username)
     {
-        $auth_user = $this->request->session()->read('Auth.User');
-        if ($auth_user !== null && $auth_user['username'] == $username) {
+        $authUser = $this->request->session()->read('Auth.User');
+        if ($this->Users->isAuthorized($authUser, $username)) {
             $this->set('isAuthorized', true);
-            $this->set('auth_user_id', $auth_user['id']);
         } else {
             $this->set('isAuthorized', false);
         }
 
-        // get user
-        $user = $this->Users->find()
-            ->where(['Users.username' => $username])
-            ->first();
-
-        if ($user == null) {
+        if (! $this->Users->contain($username)) {
             $this->Flash->error(__('存在しないユーザ名です。'));
             return $this->redirect([
                 'controller' => 'Tweets',
                 'action' => 'index'
             ]);
-        }
-
-        $followers_check = $this->Users->find()
-            ->contain(['followed'])
-            ->where(['followed.to_user_id' => $user->id]);
-
-        if ($followers_check->first() == null) {
-            $hasfollowers = false;
         } else {
-            $hasfollowers = true;
+            $user = $this->Users->getArrayBy($username);
+            $userId = $user['id'];
+            if (! $this->Users->hasFollowers($userId)) {
+                $this->set([
+                    'fullname' => $user['fullname'],
+                    'username' => $user['username'],
+                    'hasfollowers' => false
+                ]);
+            } else {
+                $this->set([
+                    'user_id' => $userId,
+                    'fullname' => $user['fullname'],
+                    'username' => $user['username'],
+                    'hasfollowers' => true,
+                    'followers' => $this->paginate($this->Users->getAllFollowers($userId)),
+                    'followers_num'=> $this->Users->getFollowersNum($userId)
+                ]);
+            }
         }
-        $this->set('hasfollowers', $hasfollowers);
-
-        // create 'get followers' query
-        $followers = $this->Users->find()
-            ->contain(['followed', 'follows_to'])
-            ->distinct(['Users.id'])
-            ->where(['followed.to_user_id' => $user->id])
-            ->order(['created' => 'DESC']);
-        $this->set('followers', $this->paginate($followers));
-
-        $this->set([
-            'user_id' => $user->id,
-            'fullname' => $user['fullname'],
-            'username' => $username,
-        ]);
-
     }
 
     /**
@@ -196,50 +154,40 @@ class UsersController extends AppController
      */
     public function following($username)
     {
-        $auth_user = $this->request->session()->read('Auth.User');
-        if ($auth_user !== null && $auth_user['username'] == $username) {
+        $authUser = $this->request->session()->read('Auth.User');
+        if ($this->Users->isAuthorized($authUser, $username)) {
             $this->set('isAuthorized', true);
-            $this->set('auth_user_id', $auth_user['id']);
+            $this->set('authUserId', $authUser['id']);
         } else {
             $this->set('isAuthorized', false);
         }
 
-        // get user
-        $user = $this->Users->find()
-            ->where(['Users.username' => $username])
-            ->first();
-
-        if ($user == null) {
+        if (! $this->Users->contain($username)) {
             $this->Flash->error(__('存在しないユーザ名です。'));
             return $this->redirect([
                 'controller' => 'Tweets',
                 'action' => 'index'
             ]);
-        }
-
-        $followings_check = $this->Users->find()
-            ->contain(['following'])
-            ->where(['following.from_user_id' => $user->id]);
-
-        if ($followings_check->first() == null) {
-            $hasfollowings = false;
         } else {
-            $hasfollowings = true;
+            $user = $this->Users->getArrayBy($username);
+            $userId = $user['id'];
+            if (! $this->Users->hasFollowings($userId)) {
+                $this->set([
+                    'username' => $user['username'],
+                    'fullname' => $user['fullname'],
+                    'hasfollowings' => false
+                ]);
+            } else {
+                $this->set([
+                    'user_id' => $userId,
+                    'fullname' => $user['fullname'],
+                    'username' => $user['username'],
+                    'hasfollowings' => true,
+                    'followings' => $this->paginate($this->Users->getAllFollowings($userId)),
+                    'followings_num'=> $this->Users->getFollowingsNum($userId)
+                ]);
+            }
         }
-        $this->set('hasfollowings', $hasfollowings);
-
-        // create 'get followers' query
-        $followings = $this->Users->find()
-            ->contain(['following'])
-            ->where(['following.from_user_id' => $user->id])
-            ->order(['created' => 'DESC']);
-        $this->set('followings', $this->paginate($followings));
-
-        $this->set([
-            'user_id' => $user->id,
-            'fullname' => $user['fullname'],
-            'username' => $username,
-        ]);
     }
 
     /*
@@ -248,14 +196,14 @@ class UsersController extends AppController
     public function search()
     {
         if ($this->request->is('post')) {
-            $search_query = $this->request->data['search_query'];
-            if ($search_query == '') {
-                $search_query = '_ALL';
+            $searchQuery = $this->request->data['searchQuery'];
+            if ($searchQuery == '') {
+                $searchQuery = '_ALL';
             }
             return $this->redirect([
                 'controller' => 'Users',
                 'action' => 'results',
-                $search_query
+                $searchQuery
             ]);
         }
     }
@@ -263,60 +211,39 @@ class UsersController extends AppController
     /*
      * Show the search results
      */
-    public function results($search_query)
+    public function results($searchQuery)
     {
-        $auth_user = $this->request->session()->read('Auth.User');
-        if ($auth_user !== null) {
+        $this->set('searchQuery', $searchQuery);
+        $authUser = $this->request->session()->read('Auth.User');
+        if ($authUser !== null) {
             $this->set('isAuthorized', true);
-            $this->set('auth_user_id', $auth_user['id']);
+            $this->set('authUserId', $authUser['id']);
         } else {
             $this->set('isAuthorized', false);
         }
 
         // 空文字の時の処理
-        if ($search_query == '_ALL') {
-            $user = $this->Users->find()->first();
-
-            if ($user == null) {
+        if ($searchQuery == '_ALL') {
+            $results = $this->Users->getAllUsersWithRelations();
+            if ($results == null) {
                 $this->set('hasResults', false);
-                return null;
             } else {
-                $this->set('hasResults', true);
-                $results = $this->Users->find()
-                    ->contain(['followed', 'follows_to'])
-                    ->distinct(['Users.id'])
-                    ->order(['created' => 'DESC']);
-
-                $this->set('search_query', $search_query);
-                $this->set('results', $this->paginate($results));
+                $this->set([
+                    'hasResults' => true,
+                    'results' => $this->paginate($results)
+                ]);
             }
-            return null;
-        }
-
-        // get user
-        $user = $this->Users->find()
-            ->where(['OR' => [
-                'Users.username LIKE' => '%' . $search_query . '%',
-                'Users.fullname LIKE' => '%' . $search_query . '%',
-            ]])
-            ->first();
-
-        if ($user == null) {
-            $this->set('hasResults', false);
-            return $this->redirect($this->referer());
         } else {
-            $this->set('hasResults', true);
-            $results = $this->Users->find()
-                ->contain(['followed', 'follows_to'])
-                ->distinct(['Users.id'])
-                ->where(['OR' => [
-                    'Users.username LIKE' => '%' . $search_query . '%',
-                    'Users.fullname LIKE' => '%' . $search_query . '%',
-                ]])
-                ->order(['created' => 'DESC']);
-
-            $this->set('search_query', $search_query);
-            $this->set('results', $this->paginate($results));
+            $results = $this->Users->getPartialMatches($searchQuery);
+            if ($results == null) {
+                $this->set('hasResults', false);
+                return $this->redirect($this->referer());
+            } else {
+                $this->set([
+                    'hasResults' => true,
+                    'results' => $this->paginate($results)
+                ]);
+            }
         }
     }
 }
