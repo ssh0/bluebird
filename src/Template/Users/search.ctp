@@ -8,7 +8,7 @@
                 'action' => 'search'
             ]
         ]) ?>
-        <?= $this->Form->input('search_query', [
+        <?= $this->Form->input('searchQuery', [
             'label' => '誰を検索しますか？',
             'placeholder' => 'ユーザ名や名前で検索'
         ]) ?>

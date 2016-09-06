@@ -1,9 +1,9 @@
 <div id="content-full">
-    <?php if ($search_query == '_ALL'):?>
+    <?php if ($searchQuery == '_ALL'):?>
         <h2> 友だちを見つけて、フォローしましょう！</h2>
         <h4>Bluebirdに登録済みの友だちを検索できます。</h4></br>
     <?php else: ?>
-        <h3><?= h($search_query); ?>の検索結果</h3>
+        <h3><?= h($searchQuery); ?>の検索結果</h3>
     <?php endif; ?>
     <div class="row">
         <?= $this->Form->create(null, [
@@ -12,7 +12,7 @@
                 'action' => 'search'
             ]
         ]) ?>
-        <?= $this->Form->input('search_query', [
+        <?= $this->Form->input('searchQuery', [
             'label' => '誰を検索しますか？',
             'placeholder' => 'ユーザ名や名前で検索'
         ]) ?>
@@ -44,7 +44,7 @@
                         } else {
                             $isFollowedAlready = false;
                             foreach ($user->follows_to as $user_followed) {
-                                if ($user_followed->from_user_id == $auth_user_id) {
+                                if ($user_followed->from_user_id == $authUserId) {
                                     $isFollowedAlready = true;
                                     break;
                                 }
