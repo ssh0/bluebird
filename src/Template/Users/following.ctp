@@ -3,7 +3,15 @@
 <div id="content">
     <div class="row">
         <?php if (! $hasfollowings): ?>
-            <h3>まだ誰もフォローしていません。</h3>
+            <h3><?= h($fullname) ?>はまだ誰もフォローしていません。</h3>
+            <?php
+                if ($isAuthorized) {
+                    echo $this->Html->link('> 友達を検索する', [
+                        'controller' => 'Users',
+                        'action' => 'search'
+                    ]);
+                }
+            ?>
         <?php else: ?>
             <h3><?= h($fullname) ?>は<?= $followings_num ?>人をフォローしています。</h3>
         <?php
