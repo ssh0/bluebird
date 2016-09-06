@@ -1,11 +1,8 @@
-<?php if (! $auth_user == null): ?>
-    <?= $this->element('sidebar-profile'); ?>
-    <div id="content">
-<?php else: ?>
-    <div id="content-full">
-<?php endif; ?>
-    <?php if (! $auth_user == null): ?>
-        <div class="row">
+<?php if ($auth_user !== null): ?>
+<?php $sidebar = $this->cell('Sidebar::display', [$auth_user['username']]); ?>
+<?= $sidebar ?>
+<div id="content">
+    <div class="row">
         <div class="tweets">
             <?= $this->Form->create(null, [
                 'url' => [
@@ -21,21 +18,24 @@
             <?= $this->Form->button(__('投稿する')); ?>
             <?= $this->Form->end() ?>
         </div>
-        </div>
-    <?php endif; ?>
-    <div class="row">
-    <div class="tweets">
-        <?php foreach ($tweets as $tweet): ?>
-        <?= $this->element('tweets', [
-            'auth_user' => $auth_user,
-            'tweet_id' => $tweet->id,
-            'username' => $tweet->user->username,
-            'fullname' => $tweet->user->fullname,
-            'content' => $tweet->content,
-            'timestamp' => $tweet->timestamp
-        ]); ?>
-        <?php endforeach ?>
     </div>
+<?php else: ?>
+<div id="content-full">
+<?php endif; ?>
+
+    <div class="row">
+        <div class="tweets">
+            <?php foreach ($tweets as $tweet): ?>
+            <?= $this->element('tweets', [
+                'auth_user' => $auth_user,
+                'tweet_id' => $tweet->id,
+                'username' => $tweet->user->username,
+                'fullname' => $tweet->user->fullname,
+                'content' => $tweet->content,
+                'timestamp' => $tweet->timestamp
+            ]); ?>
+            <?php endforeach ?>
+        </div>
     </div>
     <div class="row">
         <div id="page_prev">

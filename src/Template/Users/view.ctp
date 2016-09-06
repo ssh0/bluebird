@@ -1,22 +1,25 @@
 <?php if ($user_exist): ?>
-    <?= $this->element('sidebar-profile'); ?>
-<div id="content">
-    <div class="row">
-        <?php if (! $tweets_exist): ?>
-            <h3>ツイートはありません。</h3>
-        <?php else: ?>
-            <?php $auth_user = $this->request->session()->read('Auth.User'); ?>
-            <div class="tweets">
-            <?php foreach ($tweets as $tweet): ?>
-                <?= $this->element('tweets', [
-                    'auth_user' => $auth_user,
-                    'tweet_id' => $tweet->tweet->id,
-                    'username' => $tweet->username,
-                    'fullname' => $tweet->fullname,
-                    'content' => $tweet->tweet->content,
-                    'timestamp' => $tweet->tweet->timestamp
-                ]); ?>
-            <?php endforeach ?>
+    <?php $sidebar = $this->cell('Sidebar::display', [$username]); ?>
+    <?= $sidebar ?>
+    <div id="content">
+        <div class="row">
+            <?php if (! $tweets_exist): ?>
+                <h3>ツイートはありません。</h3>
+            <?php else: ?>
+                <?php $auth_user = $this->request->session()->read('Auth.User'); ?>
+                <div class="tweets">
+                <?php foreach ($tweets as $tweet): ?>
+                    <?= $this->element('tweets', [
+                        'auth_user' => $auth_user,
+                        'tweet_id' => $tweet->tweet->id,
+                        'username' => $tweet->username,
+                        'fullname' => $tweet->fullname,
+                        'content' => $tweet->tweet->content,
+                        'timestamp' => $tweet->tweet->timestamp
+                    ]); ?>
+                <?php endforeach ?>
+                </div>
+            <?php endif ?>
             </div>
         <?php endif ?>
     </div>

@@ -1,4 +1,5 @@
-<?= $this->element('sidebar-profile'); ?>
+<?php $sidebar = $this->cell('Sidebar::display', [$username]); ?>
+<?= $sidebar ?>
 <div id="content">
     <div class="row">
         <?php if (! $hasfollowers): ?>
