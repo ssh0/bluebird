@@ -20,23 +20,23 @@
                 <?php endforeach ?>
                 </div>
             <?php endif ?>
+        </div>
+        <?php if ($tweets_exist): ?>
+            <div class="row">
+                <div id="page_prev">
+                <?= $this->Paginator->prev() ?>
+                </div>
+                <div id="page_next">
+                <?= $this->Paginator->next() ?>
+                </div>
+                <div id="page_nums">
+                <?= $this->Paginator->numbers() ?>
+                </div>
             </div>
         <?php endif ?>
     </div>
-    <div class="row">
-        <div id="page_prev">
-        <?= $this->Paginator->prev() ?>
-        </div>
-        <div id="page_next">
-        <?= $this->Paginator->next() ?>
-        </div>
-        <div id="page_nums">
-        <?= $this->Paginator->numbers() ?>
-        </div>
-    </div>
-</div>
 <?php else: ?>
-<div id="content-full">
-    <h3>存在しないユーザ名です。</h3>
-</div>
+    <div id="content-full">
+        <h3>存在しないユーザ名です。</h3>
+    </div>
 <?php endif; ?>
