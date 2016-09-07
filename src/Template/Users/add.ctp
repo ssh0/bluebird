@@ -1,4 +1,4 @@
-<div class="users form">
+<div class="user_form">
 <?= $this->Form->create($user) ?>
     <fieldset>
         <legend><?= __('入力フォーム') ?></legend>

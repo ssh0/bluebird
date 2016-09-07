@@ -499,6 +499,11 @@ button {
     background: #966600;
 }
 
+button[type="submit"] {
+    float: right;
+    text-transform: uppercase;
+}
+
 div.message {
     text-align: center;
     cursor: pointer;
@@ -697,6 +702,18 @@ div.message.hidden {
 
 .cl {
     clear: both;
+}
+
+.user_form {
+    width: 100%;
+    min-width: 200px;
+    margin: 0 auto;
+}
+
+@media (min-width: 425px) {
+    .user_form {
+        width: 400px;
+    }
 }
 
 

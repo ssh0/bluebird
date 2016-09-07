@@ -1,5 +1,5 @@
-<div class="users form">
 <?= $this->Flash->render('auth') ?>
+<div class="user_form">
 <?= $this->Form->create() ?>
     <fieldset>
         <legend><?= __('ユーザ名とパスワードを入力してください。') ?></legend>
