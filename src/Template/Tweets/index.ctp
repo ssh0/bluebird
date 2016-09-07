@@ -1,5 +1,5 @@
-<?php if ($auth_user !== null): ?>
-<?php $sidebar = $this->cell('Sidebar::display', [$auth_user['username']]); ?>
+<?php if ($authUser !== null): ?>
+<?php $sidebar = $this->cell('Sidebar::display', [$authUser['username']]); ?>
 <?= $sidebar ?>
 <div id="content">
     <div class="row">
@@ -23,11 +23,12 @@
 <div id="content-full">
 <?php endif; ?>
 
+<?php if ($tweetsExist) ?>
     <div class="row">
         <div class="tweets">
             <?php foreach ($tweets as $tweet): ?>
             <?= $this->element('tweets', [
-                'auth_user' => $auth_user,
+                'auth_user' => $authUser,
                 'tweet_id' => $tweet->id,
                 'username' => $tweet->user->username,
                 'fullname' => $tweet->user->fullname,

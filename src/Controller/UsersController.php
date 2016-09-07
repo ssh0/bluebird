@@ -122,9 +122,10 @@ class UsersController extends AppController
      */
     public function followers($username)
     {
-        $authUser = $this->request->session()->read('Auth.User');
+        $authUser = $this->Auth->user();
         if ($this->Users->isAuthorized($authUser, $username)) {
             $this->set('isAuthorized', true);
+            $this->set('authUserId', $authUser['id']);
         } else {
             $this->set('isAuthorized', false);
         }
@@ -162,10 +163,9 @@ class UsersController extends AppController
      */
     public function following($username)
     {
-        $authUser = $this->request->session()->read('Auth.User');
+        $authUser = $this->Auth->user();
         if ($this->Users->isAuthorized($authUser, $username)) {
             $this->set('isAuthorized', true);
-            $this->set('authUserId', $authUser['id']);
         } else {
             $this->set('isAuthorized', false);
         }
@@ -222,7 +222,7 @@ class UsersController extends AppController
     public function results($searchQuery)
     {
         $this->set('searchQuery', $searchQuery);
-        $authUser = $this->request->session()->read('Auth.User');
+        $authUser = $this->Auth->user();
         if ($authUser !== null) {
             $this->set('isAuthorized', true);
             $this->set('authUserId', $authUser['id']);
