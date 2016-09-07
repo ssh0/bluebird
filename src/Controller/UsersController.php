@@ -73,7 +73,7 @@ class UsersController extends AppController
             if ($this->Users->addUser($user, $this->request->data)) {
                 $this->Flash->success(__('ユーザ登録が完了しました。'));
                 return $this->redirect([
-                    'controller' => 'Pages',
+                    'controller' => 'Users',
                     'action' => 'addsuccess',
                     $user['fullname']
                 ]);
@@ -81,6 +81,14 @@ class UsersController extends AppController
                 $this->Flash->error(__('ユーザ登録に失敗しました。'));
             }
         }
+    }
+
+    /**
+     * Register success
+     */
+    public function addsuccess($fullname)
+    {
+        $this->set('fullname', $fullname);
     }
 
     /**

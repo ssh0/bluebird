@@ -52,7 +52,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/register', ['controller' => 'Users', 'action' => 'add']);
     $routes->connect('/search', ['controller' => 'Users', 'action' => 'search']);
     $routes->connect('/results/*', ['controller' => 'Users', 'action' => 'results']);
-    $routes->connect('/addsuccess', ['controller' => 'Pages', 'action' => 'addsuccess']);
+    $routes->connect('/addsuccess/*', ['controller' => 'Users', 'action' => 'addsuccess']);
     $routes->connect('/following/*', ['controller' => 'Users', 'action' => 'following']);
     $routes->connect('/followers/*', ['controller' => 'Users', 'action' => 'followers']);
 
