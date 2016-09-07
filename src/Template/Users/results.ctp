@@ -43,8 +43,7 @@
                                 ),
                                 $this->element('follow_button', [
                                     'isAuthorized' => $isAuthorized,
-                                    'follower' => $user,
-                                    'authUserId' => $authUserId
+                                    'follower' => $user
                                 ])
                             ]
                         ]);
