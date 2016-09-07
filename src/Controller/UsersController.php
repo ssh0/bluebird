@@ -28,12 +28,12 @@ class UsersController extends AppController
      */
     public function index()
     {
-        $username = $this->request->session()->read('Auth.User');
-        if (! $username == null) {
+        $authUser = $this->request->session()->read('Auth.User');
+        if (! $authUser == null) {
             return $this->redirect([
                 'controll' => 'Users',
                 'action' => 'view',
-                $username['username']
+                $authUser['username']
             ]);
         }
         return $this->redirect([
@@ -44,19 +44,19 @@ class UsersController extends AppController
 
     public function view($username)
     {
-        $user_exist = $this->Users->contain($username);
-        $this->set('user_exist', $user_exist);
+        $userExist = $this->Users->contain($username);
+        $this->set('userExist', $userExist);
 
-        if ($user_exist) {
+        if ($userExist) {
             $user = $this->Users->getArrayBy($username);
-            $tweets_exist = $this->Users->hasTweets($username);
+            $tweetsExist = $this->Users->hasTweets($user['id']);
             $this->set([
-                'tweets_exist' => $tweets_exist,
+                'tweetsExist' => $tweetsExist,
                 'username' => $user['username'],
                 'fullname' => $user['fullname'],
             ]);
 
-            if ($tweets_exist) {
+            if ($tweetsExist) {
                 $this->set(
                     'tweets',
                     $this->paginate($this->Users->getAllTweets($username))
@@ -128,6 +128,7 @@ class UsersController extends AppController
             $this->set('authUserId', $authUser['id']);
         } else {
             $this->set('isAuthorized', false);
+            $this->set('authUserId', null);
         }
 
         if (! $this->Users->contain($username)) {
@@ -143,14 +144,14 @@ class UsersController extends AppController
                 $this->set([
                     'fullname' => $user['fullname'],
                     'username' => $user['username'],
-                    'hasfollowers' => false
+                    'hasFollowers' => false
                 ]);
             } else {
                 $this->set([
                     'user_id' => $userId,
                     'fullname' => $user['fullname'],
                     'username' => $user['username'],
-                    'hasfollowers' => true,
+                    'hasFollowers' => true,
                     'followers' => $this->paginate($this->Users->getAllFollowers($userId)),
                     'followers_num'=> $this->Users->getFollowersNum($userId)
                 ]);
@@ -183,14 +184,14 @@ class UsersController extends AppController
                 $this->set([
                     'username' => $user['username'],
                     'fullname' => $user['fullname'],
-                    'hasfollowings' => false
+                    'hasFollowings' => false
                 ]);
             } else {
                 $this->set([
                     'user_id' => $userId,
                     'fullname' => $user['fullname'],
                     'username' => $user['username'],
-                    'hasfollowings' => true,
+                    'hasFollowings' => true,
                     'followings' => $this->paginate($this->Users->getAllFollowings($userId)),
                     'followings_num'=> $this->Users->getFollowingsNum($userId)
                 ]);

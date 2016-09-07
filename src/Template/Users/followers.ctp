@@ -2,14 +2,15 @@
 <?= $sidebar ?>
 <div id="content">
     <div class="row">
-        <?php if (! $hasfollowers): ?>
+        <?php if (! $hasFollowers): ?>
             <h3><?= h($fullname) ?>にはまだフォロワーがいません。</h3></br>
             <?php
                 if ($isAuthorized) {
                     echo $this->Html->link('> 友達を検索する', [
                         'controller' => 'Users',
                         'action' => 'search'
-                    ]);
+                    ]
+                );
                 }
             ?>
         <?php else: ?>
@@ -74,7 +75,7 @@
             ?>
         <?php endif; ?>
     </div>
-    <?php if ($hasfollowers): ?>
+    <?php if ($hasFollowers): ?>
         <div class="row">
             <div id="page_prev">
             <?= $this->Paginator->prev() ?>

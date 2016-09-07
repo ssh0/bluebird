@@ -1,17 +1,17 @@
-<?php if ($user_exist): ?>
+<?php if ($userExist): ?>
     <?php $sidebar = $this->cell('Sidebar::display', [$username]); ?>
     <?= $sidebar ?>
     <div id="content">
         <div class="row">
-            <?php if (! $tweets_exist): ?>
+            <?php if (! $tweetsExist): ?>
                 <h3>ツイートはありません。</h3>
             <?php else: ?>
-                <?php $auth_user = $this->request->session()->read('Auth.User'); ?>
+                <?php $authUser = $this->request->session()->read('Auth.User'); ?>
                 <div class="tweets">
                 <?php foreach ($tweets as $tweet): ?>
                     <?= $this->element('tweets', [
-                        'auth_user' => $auth_user,
-                        'tweet_id' => $tweet->tweet->id,
+                        'authUser' => $authUser,
+                        'tweetId' => $tweet->tweet->id,
                         'username' => $tweet->username,
                         'fullname' => $tweet->fullname,
                         'content' => $tweet->tweet->content,
@@ -21,7 +21,7 @@
                 </div>
             <?php endif ?>
         </div>
-        <?php if ($tweets_exist): ?>
+        <?php if ($tweetsExist): ?>
             <div class="row">
                 <div id="page_prev">
                 <?= $this->Paginator->prev() ?>

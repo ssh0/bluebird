@@ -28,8 +28,8 @@
         <div class="tweets">
             <?php foreach ($tweets as $tweet): ?>
             <?= $this->element('tweets', [
-                'auth_user' => $authUser,
-                'tweet_id' => $tweet->id,
+                'authUser' => $authUser,
+                'tweetId' => $tweet->id,
                 'username' => $tweet->user->username,
                 'fullname' => $tweet->user->fullname,
                 'content' => $tweet->content,

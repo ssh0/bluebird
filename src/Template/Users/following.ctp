@@ -2,7 +2,7 @@
 <?= $sidebar ?>
 <div id="content">
     <div class="row">
-        <?php if (! $hasfollowings): ?>
+        <?php if (! $hasFollowings): ?>
             <h3><?= h($fullname) ?>はまだ誰もフォローしていません。</h3>
             <?php
                 if ($isAuthorized) {
@@ -63,7 +63,7 @@
         ?>
         <?php endif; ?>
     </div>
-    <?php if ($hasfollowings): ?>
+    <?php if ($hasFollowings): ?>
         <div class="row">
             <div id="page_prev">
             <?= $this->Paginator->prev() ?>
