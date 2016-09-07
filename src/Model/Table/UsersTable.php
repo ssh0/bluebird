@@ -123,17 +123,29 @@ class UsersTable extends Table
             ->execute();
     }
 
-    public function hasTweets($username)
+    public function hasTweets($userId)
     {
         $user = $this->find()
             ->contain(['Tweets'])
-            ->where(['username' => $username])
+            ->where(['user_id' => $userId])
             ->first();
 
         if ($user->tweet !== null) {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function getTweetsNum($userId)
+    {
+        if ($this->hasTweets($userId)) {
+            return (string) $this->find()
+                ->contain(['Tweets'])
+                ->where(['user_id' => $userId])
+                ->count();
+        } else {
+            return '0';
         }
     }
 

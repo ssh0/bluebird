@@ -9,7 +9,7 @@
     <div class='cl'></div>
     <div id="profile-tweets-num">
         <?php echo $this->Html->link(
-            $tweets_num, [
+            $tweetsNum, [
                 'controller' => 'Users',
                 'action' => 'view',
                 $username
@@ -17,7 +17,7 @@
     </div>
     <div id="profile-followers-num">
         <?php echo $this->Html->link(
-            $followers_num, [
+            $followersNum, [
                 'controller' => 'Users',
                 'action' => 'followers',
                 $username
@@ -25,7 +25,7 @@
     </div>
     <div id="profile-following-num">
         <?php echo $this->Html->link(
-            $followings_num, [
+            $followingsNum, [
                 'controller' => 'Users',
                 'action' => 'following',
                 $username
