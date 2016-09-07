@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use Cake\Core\Configure;
 use Cake\Event\Event;
-use Cake\Network\Exception\NotFoundException;
-use Cake\View\Exception\MissingTemplateException;
 
 class TweetsController extends AppController
 {
@@ -33,29 +31,16 @@ class TweetsController extends AppController
 
     public function index()
     {
-        $auth_user = $this->request->session()->read('Auth.User');
-        $this->set('auth_user', $auth_user);
+        $authUser = $this->request->session()->read('Auth.User');
+        $this->set('authUser', $authUser);
 
-        $tweets_check = $this->Tweets->find()
-            ->contain(['Users'])
-            ->first();
-
-        if ($tweets_check == null) {
-            $tweets_exist = false;
-        } else {
-            $tweets_exist = true;
-        }
-        $this->set('tweets_exist', $tweets_exist);
-
-        if ($tweets_exist) {
-            $this->set('tweets', $this->paginate());
-        }
-
-        if (! $auth_user == null) {
+        if ($this->Tweets->isNotEmpty()) {
             $this->set([
-                'fullname' => $auth_user['fullname'],
-                'username' => $auth_user['username'],
+                'tweetsExist' => true,
+                'tweets' => $this->paginate()
             ]);
+        } else {
+            $this->set('tweetsExist', false);
         }
     }
 
@@ -65,10 +50,11 @@ class TweetsController extends AppController
     public function posts()
     {
         if ($this->request->is('post')) {
-            $tweets = $this->Tweets->newEntity();
-            $tweets->user_id = $this->Auth->user()['id'];
-            $user = $this->Tweets->patchEntity($tweets, $this->request->data);
-            if ($this->Tweets->save($tweets)) {
+            $result = $this->Tweets->addTweet(
+                $this->Auth->user('id'),
+                $this->request->data
+            );
+            if ($result) {
                 $this->Flash->success(__('ツイートしました。'));
             } else {
                 $this->Flash->error(__('ツイートに失敗しました。'));
@@ -83,23 +69,13 @@ class TweetsController extends AppController
     /**
      * Remove post
      */
-    public function remove($tweet_id)
+    public function remove($tweetId)
     {
         if ($this->request->is('post')) {
-            // Is authorized action?
-            $query = $this->Tweets->find('all')
-                ->select(['user_id'])
-                ->where(['id' => $tweet_id]);
-            $user_id = $query->first()->user_id;
-            $auth_user_id = $this->request->session()->read('Auth.User');
-            if ($user_id == $auth_user_id['id']) {
-                $query = $this->Tweets->query();
-                $query->delete()
-                    ->where(['id' => $tweet_id])
-                    ->execute();
+            if ($this->Tweets->removeTweet($this->Auth->user('id'), $tweetId)) {
                 $this->Flash->success(__('ツイートを削除しました。'));
             } else {
-                $this->Flash->error(__('不正な操作です。'));
+                $this->Flash->error(__('ツイートの削除に失敗しました。'));
             }
         }
         return $this->redirect([
@@ -107,5 +83,4 @@ class TweetsController extends AppController
             'action' => 'index'
         ]);
     }
-
 }
