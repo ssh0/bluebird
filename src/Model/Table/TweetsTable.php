@@ -62,5 +62,73 @@ class TweetsTable extends Table
             return false;
         }
     }
+
+    public function getLatestTweet()
+    {
+        if ($this->isNotEmpty()) {
+            return $this->find()
+                ->contain('Users')
+                ->order([
+                    'timestamp' => 'DESC'
+                ])
+                ->first();
+        } else {
+            return null;
+        }
+    }
+
+    public function countTweetsInView($oldestId, $latestId)
+    {
+        if ($this->isNotEmpty()) {
+            return $this->find()
+                ->where(['AND' => [
+                    'id >=' => $oldestId,
+                    'id <=' => $latestId
+                ]])
+                ->count();
+        } else {
+            return 0;
+        }
+    }
+
+
+    public function updateTweets($oldestId)
+    {
+        if ($this->isNotEmpty()) {
+            return $this->find()
+                ->contain('Users')
+                ->where(['Tweets.id >=' => $oldestId])
+                ->order(['timestamp' => 'DESC']);
+        }
+        return null;
+    }
+
+
+    public function loadTweetsAfter($tweetId)
+    {
+        if ($this->isNotEmpty()) {
+            if ($this->find()->where(['id >' => $tweetId])->count() > 0) {
+                return $this->find()
+                    ->contain('Users')
+                    ->where(['Tweets.id >' => $tweetId])
+                    ->order(['timestamp' => 'DESC']);
+            }
+        }
+        return null;
+    }
+
+    public function loadTweetsBefore($tweetId)
+    {
+        if ($this->isNotEmpty()) {
+            if ($this->find()->where(['id <' => $tweetId])->count() > 0) {
+                return $this->find()
+                    ->contain('Users')
+                    ->limit(10)
+                    ->where(['Tweets.id <' => $tweetId])
+                    ->order(['timestamp' => 'DESC']);
+            }
+        }
+        return null;
+    }
 }
 

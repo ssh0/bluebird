@@ -770,3 +770,23 @@ div.message.hidden {
     margin: -10px -10px 0 0;
 }
 
+
+div.tweet-removebutton {
+    cursor: pointer;
+}
+
+#content_end_message {
+    text-align: center;
+    color: #626262;
+    display: none;
+}
+
+#loading {
+    text-align: center;
+    color: #626262;
+    display: none;
+}
+
+
+
+
