@@ -1,3 +1,4 @@
+<?= $this->append('script', $this->Html->script('remove_tweet.js')) ?>
 <?php if ($userExist): ?>
     <?php $sidebar = $this->cell('Sidebar::display', [$username]); ?>
     <?= $sidebar ?>
