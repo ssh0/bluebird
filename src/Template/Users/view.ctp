@@ -19,16 +19,12 @@
                         'timestamp' => $tweet->tweet->timestamp
                     ]); ?>
                 <?php endforeach ?>
+                    <div id="page_prev"><?= $this->Paginator->prev() ?></div>
+                    <div id="page_next"><?= $this->Paginator->next() ?></div>
+                    <div id="page_nums"><?= $this->Paginator->numbers() ?></div>
                 </div>
             <?php endif ?>
         </div>
-        <?php if ($tweetsExist): ?>
-            <div class="row">
-                <div id="page_prev"><?= $this->Paginator->prev() ?></div>
-                <div id="page_next"><?= $this->Paginator->next() ?></div>
-                <div id="page_nums"><?= $this->Paginator->numbers() ?></div>
-            </div>
-        <?php endif ?>
     </div>
 <?php else: ?>
     <div id="content-full">
