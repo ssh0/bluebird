@@ -1,3 +1,4 @@
+<?= $this->append('script', $this->Html->script('follow.js')) ?>
 <?php $sidebar = $this->cell('Sidebar::display', [$username]); ?>
 <?= $sidebar ?>
 <div id="content">
@@ -15,33 +16,29 @@
             ?>
         <?php else: ?>
             <h3><?= h($fullname) ?>は<?= $followers_num ?>人にフォローされています。</h3>
-            <?php
-                echo PHP_EOL, '<table cellpadding="0" cellspacing="0" class="db-table">', PHP_EOL;
-                echo $this->Html->tableHeaders(['Name', 'Created', '']);
-                foreach ($followers as $follower) {
-                    echo $this->Html->tableCells([
-                        [
-                            $follower->fullname . $this->Html->link(
-                                '@' . $follower->username, [
-                                    'controller' => 'Users',
-                                    'action' => 'view',
-                                    $follower->username
-                                ]),
-                            $follower->created->i18nFormat(
-                                'Y年M月d日 HH時mm分ss秒',
-                                'Asia/Tokyo',
-                                'ja-JP'
-                            ),
-                            $this->element('follow_button', [
-                                'isAuthorized' => $isAuthorized,
-                                'follower' => $follower,
-                                'authUserId' => $authUserId
-                            ])
-                        ]
-                    ]);
-                }
-                print("</table><br />\n");
-            ?>
+        <div class="follows">
+            <?php foreach ($followers as $follower): ?>
+            <?php if ($follower->tweet == null) {
+                $content = '';
+                $timestamp = '';
+            } else {
+                /* debug($follower); */
+                $content = $follower->tweet->content;
+                $timestamp = $follower->tweet->timestamp;
+            } ?>
+            <?= $this->element('follows', [
+                'isAuthorized' => $isAuthorized,
+                'authUserId' => $authUserId,
+                'followId' => $follower->followed->id,
+                'userId' => $follower->id,
+                'username' => $follower->username,
+                'fullname' => $follower->fullname,
+                'timestamp' => $timestamp,
+                'content' => $content,
+                'follow' => $follower
+            ])?>
+            <?php endforeach ?>
+        </div>
         <?php endif; ?>
     </div>
     <?php if ($hasFollowers): ?>

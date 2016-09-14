@@ -85,6 +85,7 @@ class UsersTable extends Table
     public function getArrayBy($username)
     {
         return $this->find()
+            ->contain('Tweets')
             ->where(['username' => $username])
             ->first()
             ->toArray();
@@ -186,9 +187,13 @@ class UsersTable extends Table
     public function getAllFollowings($userId)
     {
         return $this->find()
-            ->contain(['following'])
+            ->contain(['following', 'follows_to', 'Tweets' ])
+            ->distinct('Users.id')
             ->where(['following.from_user_id' => $userId])
-            ->order(['created' => 'DESC']);
+            ->order([
+                'Users.created' => 'DESC',
+                'Tweets.timestamp' => 'ASC'
+            ]);
     }
 
     public function hasFollowers($userId)
@@ -220,10 +225,13 @@ class UsersTable extends Table
     public function getAllFollowers($userId)
     {
         return $this->find()
-            ->contain(['followed', 'follows_to'])
-            ->distinct(['Users.id'])
+            ->contain(['followed', 'follows_to', 'Tweets'])
+            ->distinct('Users.id')
             ->where(['followed.to_user_id' => $userId])
-            ->order(['created' => 'DESC']);
+            ->order([
+                'Users.created' => 'DESC',
+                'Tweets.timestamp' => 'ASC'
+            ]);
     }
 
     public function getPartialMatches($query)

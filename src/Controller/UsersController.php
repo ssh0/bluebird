@@ -167,8 +167,10 @@ class UsersController extends AppController
         $authUser = $this->Auth->user();
         if ($this->Users->isAuthorized($authUser, $username)) {
             $this->set('isAuthorized', true);
+            $this->set('authUserId', $authUser['id']);
         } else {
             $this->set('isAuthorized', false);
+            $this->set('authUserId', null);
         }
 
         if (! $this->Users->contain($username)) {
