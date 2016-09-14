@@ -9,6 +9,9 @@ function removeTweet() {
         url: '/tweets/ajaxRemove/' + tweet_id,
         success: function() {
           $('div.tweet[id=' + tweet_id + ']').remove();
+
+          var tweets_num = parseInt($('#profile-tweets-num').children('a').text());
+          $('#profile-tweets-num').children('a').text(tweets_num - 1);
         },
         error: function() {
           alert("ツイートの削除に失敗しました。");

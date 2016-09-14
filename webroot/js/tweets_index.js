@@ -11,6 +11,9 @@ function postTweet() {
         $('#tweet_button').attr('disabled', false);
         $('textarea').val('');
         acceptNewTweets_();
+
+        var tweets_num = parseInt($('#profile-tweets-num').children('a').text());
+        $('#profile-tweets-num').children('a').text(tweets_num + 1);
       },
       error: function() {
         $('#tweet_button').attr('disabled', false);
@@ -47,7 +50,7 @@ function acceptNewTweets_() {
 
 function syncAllTweets() {
   // Update each 37 seconds
-  var interval_time_ms = 10000;
+  var interval_time_ms = 37000;
   setInterval(syncAllTweets_, interval_time_ms);
 }
 
