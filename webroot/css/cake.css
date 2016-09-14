@@ -768,12 +768,64 @@ div.message.hidden {
 .tweet-removebutton {
     float: right;
     margin: -10px -10px 0 0;
-}
-
-
-div.tweet-removebutton {
     cursor: pointer;
 }
+
+
+.follows {
+    width: 100%;
+    min-width: 200px;
+    margin: 0 auto;
+}
+
+@media (min-width: 880px) {
+    .follows {
+        width: 600px;
+    }
+}
+
+.follow {
+    padding: 20px;
+    max-width: 100%;
+    margin: 0 5px 30px 5px;
+    background-color:#fff;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #ccc;
+    box-shadow: 0 1px 6px #ccc;
+}
+
+.follow-name {
+    float: left;
+}
+
+.follow-fullname {
+    color: #303030;
+    float: left;
+    font-weight: bold;
+}
+
+.follow-username {
+    color: #909090;
+    float: left;
+}
+
+.follow-created {
+    color: #909090;
+    float: right;
+    font-size: x-small;
+}
+
+.follow-tweet {
+    word-wrap: break-word;
+}
+
+.follow-button {
+    float: right;
+    margin: -10px -10px 0 0;
+    cursor: pointer;
+}
+
 
 #content_end_message {
     text-align: center;
