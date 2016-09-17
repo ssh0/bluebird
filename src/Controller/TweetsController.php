@@ -29,6 +29,7 @@ class TweetsController extends AppController
         parent::beforeFilter($event);
         $this->Auth->allow([
             'index',
+            'ajaxRecieveNewTweets',
             'ajaxSyncAllTweets',
             'ajaxLoadTweets'
         ]);
@@ -52,65 +53,23 @@ class TweetsController extends AppController
     /**
      * Submit post
      */
-    public function posts()
-    {
-        if ($this->request->is('post')) {
-            $result = $this->Tweets->addTweet(
-                $this->Auth->user('id'),
-                $this->request->data
-            );
-            if ($result) {
-                $this->Flash->success(__('ツイートしました。'));
-            } else {
-                $this->Flash->error(__('ツイートに失敗しました。'));
-            }
-        }
-        return $this->redirect([
-            'controller' => 'Tweets',
-            'action' => 'index'
-        ]);
-    }
-
     public function ajaxPost()
     {
         $this->autoRender = false;
         if ($this->request->is('ajax')) {
             $authUser = $this->Auth->user();
-            $addTweetStatus = $this->Tweets->addTweet(
+            $this->Tweets->addTweet(
                 $authUser['id'],
                 $this->request->data
             );
         }
     }
 
-
-    /**
-     * Remove post
-     */
-    public function remove($tweetId)
-    {
-        if ($this->request->is('post')) {
-            if ($this->Tweets->removeTweet($this->Auth->user('id'), $tweetId)) {
-                $this->Flash->success(__('ツイートを削除しました。'));
-            } else {
-                $this->Flash->error(__('ツイートの削除に失敗しました。'));
-            }
-        }
-        return $this->redirect([
-            'controller' => 'Tweets',
-            'action' => 'index'
-        ]);
-    }
-
     public function ajaxRemove($tweetId)
     {
         $this->autoRender = false;
         if ($this->request->is('ajax')) {
-            if ($this->Tweets->removeTweet($this->Auth->user('id'), $tweetId)) {
-                return null;
-            } else {
-                return null;
-            }
+            $this->Tweets->removeTweet($this->Auth->user('id'), $tweetId);
         }
     }
 

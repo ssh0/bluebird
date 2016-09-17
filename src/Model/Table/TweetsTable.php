@@ -33,6 +33,15 @@ class TweetsTable extends Table
         }
     }
 
+    public function getTweetsNum()
+    {
+        if ($this->isNotEmpty()) {
+            return (string) $this->find()->count();
+        } else {
+            return '0';
+        }
+    }
+
     public function addTweet($userId, $data)
     {
         $tweet = $this->newEntity();
@@ -41,7 +50,7 @@ class TweetsTable extends Table
         if ($this->save($patched)) {
             return true;
         } else {
-            return true;
+            return false;
         }
     }
 

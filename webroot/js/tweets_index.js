@@ -41,7 +41,7 @@ function acceptNewTweets_() {
       $('div.tweets').prepend(result);
     },
     error: function() {
-      alert("error");
+      alert("Connection error");
     }
   });
 
@@ -70,7 +70,7 @@ function syncAllTweets_() {
       }
     },
     error: function() {
-      alert("error");
+      alert("Connection error");
     }
   });
 }
@@ -96,7 +96,7 @@ function lazyLoad() {
             $('#loading').hide();
         },
         error: function() {
-          alert("error");
+          alert("Connection error");
         }
       });
     }
