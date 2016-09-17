@@ -25,6 +25,14 @@ class FollowsTable extends Table
 
     public function add($authUserId, $userId)
     {
+        $count = $this->find()
+            ->where(['from_user_id' => $authUserId])
+            ->andWhere(['to_user_id' => $userId])
+            ->count();
+        if ($count > 0) {
+            return null;
+        }
+
         $query = $this->query();
         $query->insert(['from_user_id', 'to_user_id'])
             ->values([
@@ -36,6 +44,14 @@ class FollowsTable extends Table
 
     public function remove($authUserId, $userId)
     {
+        $count = $this->find()
+            ->where(['from_user_id' => $authUserId])
+            ->andWhere(['to_user_id' => $userId])
+            ->count();
+        if ($count !== 1) {
+            return null;
+        }
+
         $query = $this->query();
         $query->delete()
             ->where([

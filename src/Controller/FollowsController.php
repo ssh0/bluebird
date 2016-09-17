@@ -10,16 +10,10 @@ class FollowsController extends AppController
      */
     public function addFollow($userId)
     {
-        if ($this->request->is('post')) {
-            // Is authorized action?
-            /* $authUser = $this->request->session()->read('Auth.User'); */
-            if ($this->Follows->add($this->Auth->user('id'), $userId)) {
-                $this->Flash->success(__('フォローに追加しました'));
-            } else {
-                $this->Flash->error(__('フォローへの追加に失敗しました。'));
-            }
+        $this->autoRender = false;
+        if ($this->request->is('ajax')) {
+            $this->Follows->add($this->Auth->user('id'), $userId);
         }
-        return $this->redirect($this->referer());
     }
 
     /**
@@ -27,16 +21,10 @@ class FollowsController extends AppController
      */
     public function unfollow($userId)
     {
-        if ($this->request->is('post')) {
-            // Is authorized action?
-            /* $authUser = $this->request->session()->read('Auth.User'); */
-            if ($this->Follows->remove($this->Auth->user('id'), $userId)) {
-                $this->Flash->success(__('フォローを解除しました'));
-            } else {
-                $this->Flash->error(__('フォロー解除に失敗しました。'));
-            }
+        $this->autoRender = false;
+        if ($this->request->is('ajax')) {
+            $this->Follows->remove($this->Auth->user('id'), $userId);
         }
-        return $this->redirect($this->referer());
     }
 }
 
