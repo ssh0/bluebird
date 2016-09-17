@@ -31,13 +31,13 @@ class UsersController extends AppController
         $authUser = $this->request->session()->read('Auth.User');
         if (! $authUser == null) {
             return $this->redirect([
-                'controll' => 'Users',
+                'controller' => 'Users',
                 'action' => 'view',
                 $authUser['username']
             ]);
         }
         return $this->redirect([
-            'controll' => 'Tweets',
+            'controller' => 'Tweets',
             'action' => 'index'
         ]);
     }
