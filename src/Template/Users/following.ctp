@@ -15,36 +15,31 @@
             ?>
         <?php else: ?>
             <h3><?= h($fullname) ?>は<?= $followings_num ?>人をフォローしています。</h3>
-        <div class="follows">
-            <?php foreach ($followings as $following): ?>
-            <?php if ($following->tweet == null) {
-                $content = '';
-                $timestamp = '';
-            } else {
-                $content = $following->tweet->content;
-                $timestamp = $following->tweet->timestamp;
-            } ?>
-            <?= $this->element('follows', [
-                'isAuthorized' => $isAuthorized,
-                'authUserId' => $authUserId,
-                'followId' => $following->following->id,
-                'userId' => $following->id,
-                'username' => $following->username,
-                'fullname' => $following->fullname,
-                'timestamp' => $timestamp,
-                'content' => $content,
-                'follow' => $following
-            ])?>
-            <?php endforeach ?>
-        </div>
+            <div class="follows">
+                <?php foreach ($followings as $following): ?>
+                    <?php if ($following->tweet == null) {
+                        $content = '';
+                        $timestamp = '';
+                    } else {
+                        $content = $following->tweet->content;
+                        $timestamp = $following->tweet->timestamp;
+                    } ?>
+                    <?= $this->element('follows', [
+                        'isAuthorized' => $isAuthorized,
+                        'authUserId' => $authUserId,
+                        'userId' => $following->id,
+                        'username' => $following->username,
+                        'fullname' => $following->fullname,
+                        'timestamp' => $timestamp,
+                        'content' => $content,
+                        'follow' => $following
+                    ])?>
+                <?php endforeach ?>
+                <div id="page_prev"><?= $this->Paginator->prev() ?></div>
+                <div id="page_next"><?= $this->Paginator->next() ?></div>
+                <div id="page_nums"><?= $this->Paginator->numbers() ?></div>
+            </div>
         <?php endif; ?>
     </div>
-    <?php if ($hasFollowings): ?>
-        <div class="row">
-            <div id="page_prev"><?= $this->Paginator->prev() ?></div>
-            <div id="page_next"><?= $this->Paginator->next() ?></div>
-            <div id="page_nums"><?= $this->Paginator->numbers() ?></div>
-        </div>
-    <?php endif; ?>
 </div>
 
