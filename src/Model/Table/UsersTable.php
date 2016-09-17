@@ -109,9 +109,9 @@ class UsersTable extends Table
         ]);
 
         if ($this->save($patched)) {
-            return true;  // success
+            return true;
         } else {
-            return false;  // fail
+            return false;
         }
     }
 
@@ -131,7 +131,35 @@ class UsersTable extends Table
             ->where(['user_id' => $userId])
             ->first();
 
-        if ($user->tweet !== null) {
+        if ($user !== null && $user->tweet !== null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function hasFollowings($userId)
+    {
+        $user = $this->find()
+            ->contain(['following'])
+            ->where(['following.from_user_id' => $userId])
+            ->first();
+
+        if ($user !== null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function hasFollowers($userId)
+    {
+        $user = $this->find()
+            ->contain(['followed'])
+            ->where(['followed.to_user_id' => $userId])
+            ->first();
+
+        if ($user !== null) {
             return true;
         } else {
             return false;
@@ -150,28 +178,6 @@ class UsersTable extends Table
         }
     }
 
-    public function getAllTweets($username)
-    {
-        return $this->find()
-            ->contain('Tweets')
-            ->where(['username' => $username])
-            ->order(['timestamp' => 'DESC']);
-    }
-
-    public function hasFollowings($userId)
-    {
-        $user = $this->find()
-            ->contain(['following'])
-            ->where(['following.from_user_id' => $userId])
-            ->first();
-
-        if ($user !== null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public function getFollowingsNum($userId)
     {
         if ($this->hasFollowings($userId)) {
@@ -181,32 +187,6 @@ class UsersTable extends Table
                 ->count();
         } else {
             return '0';
-        }
-    }
-
-    public function getAllFollowings($userId)
-    {
-        return $this->find()
-            ->contain(['following', 'follows_to', 'Tweets' ])
-            ->distinct('Users.id')
-            ->where(['following.from_user_id' => $userId])
-            ->order([
-                'Users.created' => 'DESC',
-                'Tweets.timestamp' => 'ASC'
-            ]);
-    }
-
-    public function hasFollowers($userId)
-    {
-        $user = $this->find()
-            ->contain(['followed'])
-            ->where(['followed.to_user_id' => $userId])
-            ->first();
-
-        if ($user !== null) {
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -222,51 +202,97 @@ class UsersTable extends Table
         }
     }
 
-    public function getAllFollowers($userId)
+    public function getAllTweets($username)
     {
         return $this->find()
-            ->contain(['followed', 'follows_to', 'Tweets'])
-            ->distinct('Users.id')
-            ->where(['followed.to_user_id' => $userId])
-            ->order([
-                'Users.created' => 'DESC',
-                'Tweets.timestamp' => 'ASC'
-            ]);
+            ->contain('Tweets')
+            ->where(['username' => $username])
+            ->order(['timestamp' => 'DESC']);
+    }
+
+    public function getAllFollowings($userId)
+    {
+        $whereCondition = ['following.from_user_id' => $userId];
+        $contains = ['following', 'follows_to', 'Tweets'];
+        return $this->getAllLatestTweets($whereCondition, $contains);
+    }
+
+    public function getAllFollowers($userId)
+    {
+        $whereCondition = ['followed.to_user_id' => $userId];
+        $contains = ['followed', 'follows_to', 'Tweets'];
+        return $this->getAllLatestTweets($whereCondition, $contains);
     }
 
     public function getPartialMatches($query)
     {
-        $user = $this->find()
-            ->where(['OR' => [
-                'Users.username LIKE' => '%' . $query . '%',
-                'Users.fullname LIKE' => '%' . $query . '%',
-            ]])
-            ->first();
-
-        if ($user !== null) {
-            return $this->find()
-                ->contain(['followed', 'follows_to'])
-                ->distinct(['Users.id'])
-                ->where(['OR' => [
-                    'Users.username LIKE' => '%' . $query . '%',
-                    'Users.fullname LIKE' => '%' . $query . '%',
-                ]])
-                ->order(['created' => 'DESC']);
-        } else {
-            return null;
-        }
+        $whereCondition = ['OR' => [
+            'Users.username LIKE' => '%' . $query . '%',
+            'Users.fullname LIKE' => '%' . $query . '%',
+        ]];
+        $contains = ['followed', 'follows_to', 'Tweets'];
+        return $this->getAllLatestTweets($whereCondition, $contains);
     }
 
     public function getAllUsersWithRelations()
     {
-        if ($this->find()->first() !== null) {
-            return $this->find()
-                ->contain(['followed', 'follows_to'])
-                ->distinct(['Users.id'])
-                ->order(['created' => 'DESC']);
-        } else {
+        $whereCondition = [];
+        $contains = ['followed', 'follows_to', 'Tweets'];
+        return $this->getAllLatestTweets($whereCondition, $contains);
+    }
+
+    public function getAllLatestTweets($condition, $contains)
+    {
+        $containsWithoutTweets = array_diff($contains, ['Tweets']);
+        $user = $this->find()
+            ->contain($containsWithoutTweets)
+            ->select(['user_id' => 'Users.id'])
+            ->where($condition);
+
+        $userIds = [];
+        foreach ($user as $id) {
+            $userIds[] = $id['user_id'];
+        }
+
+        if (empty($userIds)) {
             return null;
         }
+
+        $latestTweetId = $this->find();
+        $latestTweetId
+            ->matching('Tweets')
+            ->contain($containsWithoutTweets)
+            ->where($condition)
+            ->group(['Users.id'])
+            ->select([
+                'user_id' => 'Users.id',
+                'latest_id' => $latestTweetId->func()->max('Tweets.id')
+            ]);
+
+        $tweetIds = [];
+        $diffUserIds = [];
+        foreach ($latestTweetId as $id) {
+            $tweetIds[] = $id['latest_id'];
+            $diffUserIds[] = $id['user_id'];
+        }
+
+        if (! empty($tweetIds)) {
+            $whereCondition = ['Tweets.id IN' => $tweetIds];
+        } else {
+            $whereCondition = [];
+        }
+
+        $diffedUserIds = array_diff($userIds, $diffUserIds);
+        if (! empty($diffedUserIds)) {
+            $whereCondition[] = ['Users.id IN' => $diffedUserIds];
+            $whereCondition = ['OR' => $whereCondition];
+        }
+
+        return $this->find()
+                ->contain($contains)
+                ->where($whereCondition)
+                ->group('Users.id')
+                ->order(['created' => 'DESC']);
     }
 }
 

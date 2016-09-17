@@ -1,3 +1,4 @@
+<?= $this->append('script', $this->Html->script('follow.js')) ?>
 <div id="content-full">
     <?php if ($searchQuery == '_ALL'):?>
         <h2> 友だちを見つけて、フォローしましょう！</h2>
@@ -21,43 +22,36 @@
     </div>
     <hr/>
     <div class="row">
-            <?php if (! $hasResults): ?>
-                <h3>対象のユーザは見つかりません。</h3>
-            <?php else: ?>
-                <?php
-                    echo PHP_EOL, '<table cellpadding="0" cellspacing="0" class="db-table">', PHP_EOL;
-                    echo $this->Html->tableHeaders(['Name', 'Created', '']);
-                    foreach ($results as $user) {
-                        echo $this->Html->tableCells([
-                            [
-                                $user->fullname . $this->Html->link(
-                                    '@' . $user->username, [
-                                        'controller' => 'Users',
-                                        'action' => 'view',
-                                        $user->username
-                                    ]),
-                                $user->created->i18nFormat(
-                                    'Y年M月d日 HH時mm分ss秒',
-                                    'Asia/Tokyo',
-                                    'ja-JP'
-                                ),
-                                $this->element('follow_button', [
-                                    'isAuthorized' => $isAuthorized,
-                                    'follower' => $user
-                                ])
-                            ]
-                        ]);
-                    }
-                    print("</table><br />\n");
-                ?>
-            <?php endif; ?>
+        <?php // debug($results); ?>
+        <?php if (! $hasResults): ?>
+            <h3>対象のユーザは見つかりません。</h3>
+        <?php else: ?>
+            <div class="follows">
+                <?php foreach ($results as $user): ?>
+                <?php if ($user->tweet == null) {
+                    $content = '';
+                    $timestamp = '';
+                } else {
+                    /* debug($user); */
+                    $content = $user->tweet->content;
+                    $timestamp = $user->tweet->timestamp;
+                } ?>
+                <?= $this->element('follows', [
+                    'isAuthorized' => $isAuthorized,
+                    'authUserId' => $authUserId,
+                    'userId' => $user->id,
+                    'username' => $user->username,
+                    'fullname' => $user->fullname,
+                    'timestamp' => $user->created,
+                    'content' => $content,
+                    'follow' => $user
+                ])?>
+                <?php endforeach ?>
+                <div id="page_prev"><?= $this->Paginator->prev() ?></div>
+                <div id="page_next"><?= $this->Paginator->next() ?></div>
+                <div id="page_nums"><?= $this->Paginator->numbers() ?></div>
+            </div>
+        <?php endif; ?>
     </div>
-    <?php if ($hasResults): ?>
-        <div class="row">
-            <div id="page_prev"><?= $this->Paginator->prev() ?></div>
-            <div id="page_next"><?= $this->Paginator->next() ?></div>
-            <div id="page_nums"><?= $this->Paginator->numbers() ?></div>
-        </div>
-    <?php endif; ?>
 </div>
 
