@@ -137,26 +137,28 @@ class UsersController extends AppController
                 'controller' => 'Tweets',
                 'action' => 'index'
             ]);
-        } else {
-            $user = $this->Users->getArrayBy($username);
-            $userId = $user['id'];
-            if (! $this->Users->hasFollowers($userId)) {
-                $this->set([
-                    'fullname' => $user['fullname'],
-                    'username' => $user['username'],
-                    'hasFollowers' => false
-                ]);
-            } else {
-                $this->set([
-                    'user_id' => $userId,
-                    'fullname' => $user['fullname'],
-                    'username' => $user['username'],
-                    'hasFollowers' => true,
-                    'followers' => $this->paginate($this->Users->getAllFollowers($userId)),
-                    'followers_num'=> $this->Users->getFollowersNum($userId)
-                ]);
-            }
         }
+
+        $user = $this->Users->getArrayBy($username);
+        $userId = $user['id'];
+
+        if (! $this->Users->hasFollowers($userId)) {
+            $this->set([
+                'fullname' => $user['fullname'],
+                'username' => $user['username'],
+                'hasFollowers' => false
+            ]);
+            return;
+        }
+
+        $this->set([
+            'user_id' => $userId,
+            'fullname' => $user['fullname'],
+            'username' => $user['username'],
+            'hasFollowers' => true,
+            'followers' => $this->paginate($this->Users->getAllFollowers($userId)),
+            'followers_num'=> $this->Users->getFollowersNum($userId)
+        ]);
     }
 
     /**
@@ -179,26 +181,27 @@ class UsersController extends AppController
                 'controller' => 'Tweets',
                 'action' => 'index'
             ]);
-        } else {
-            $user = $this->Users->getArrayBy($username);
-            $userId = $user['id'];
-            if (! $this->Users->hasFollowings($userId)) {
-                $this->set([
-                    'username' => $user['username'],
-                    'fullname' => $user['fullname'],
-                    'hasFollowings' => false
-                ]);
-            } else {
-                $this->set([
-                    'user_id' => $userId,
-                    'fullname' => $user['fullname'],
-                    'username' => $user['username'],
-                    'hasFollowings' => true,
-                    'followings' => $this->paginate($this->Users->getAllFollowings($userId)),
-                    'followings_num'=> $this->Users->getFollowingsNum($userId)
-                ]);
-            }
         }
+
+        $user = $this->Users->getArrayBy($username);
+        $userId = $user['id'];
+        if (! $this->Users->hasFollowings($userId)) {
+            $this->set([
+                'username' => $user['username'],
+                'fullname' => $user['fullname'],
+                'hasFollowings' => false
+            ]);
+            return;
+        }
+
+        $this->set([
+            'user_id' => $userId,
+            'fullname' => $user['fullname'],
+            'username' => $user['username'],
+            'hasFollowings' => true,
+            'followings' => $this->paginate($this->Users->getAllFollowings($userId)),
+            'followings_num'=> $this->Users->getFollowingsNum($userId)
+        ]);
     }
 
     /*
@@ -231,6 +234,7 @@ class UsersController extends AppController
             $this->set('authUserId', $authUser['id']);
         } else {
             $this->set('isAuthorized', false);
+            $this->set('authUserId', null);
         }
 
         // 空文字の時の処理
@@ -248,7 +252,6 @@ class UsersController extends AppController
             $results = $this->Users->getPartialMatches($searchQuery);
             if ($results == null) {
                 $this->set('hasResults', false);
-                return $this->redirect($this->referer());
             } else {
                 $this->set([
                     'hasResults' => true,
