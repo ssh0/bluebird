@@ -616,19 +616,39 @@ div.message.hidden {
     border-bottom: 0px;
 }
 
-#page_prev {
-    float: left;
-    width: 100px;
-    text-align: left;
+
+#pagination {
+    margin-bottom: 40px;
+    padding: 10px;
 }
 
-#page_next {
+.page_next {
     float: right;
     width: 100px;
     text-align: right;
 }
 
-#page_nums {
+.page_prev {
+    float: left;
+    width: 100px;
+    text-align: left;
+}
+
+.page_prev_disabled {
+    float: left;
+    width: 100px;
+    text-align: left;
+    color: #aaaaaa;
+}
+
+.page_next_disabled {
+    float: right;
+    width: 100px;
+    text-align: right;
+    color: #aaaaaa;
+}
+
+.page_nums {
     margin: 0 100px;
     text-align: center;
 }
