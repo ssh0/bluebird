@@ -35,9 +35,11 @@
                         'follow' => $follower
                     ])?>
                 <?php endforeach ?>
-                <div id="page_prev"><?= $this->Paginator->prev() ?></div>
-                <div id="page_next"><?= $this->Paginator->next() ?></div>
-                <div id="page_nums"><?= $this->Paginator->numbers() ?></div>
+                <div id="pagination">
+                    <?= $this->Paginator->prev() ?>
+                    <?= $this->Paginator->next() ?>
+                    <div class="page_nums"><?= $this->Paginator->numbers() ?></div>
+                </div>
             </div>
         <?php endif; ?>
     </div>

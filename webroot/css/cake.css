@@ -854,6 +854,9 @@ div.message.hidden {
 }
 
 #loading {
+    padding: 100px;
+    max-width: 100%;
+    margin-bottom: 30px;
     text-align: center;
     color: #626262;
     display: none;

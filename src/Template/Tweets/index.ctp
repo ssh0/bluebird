@@ -39,6 +39,7 @@
         ); ?>
             <?php endforeach ?>
         </div>
+        <div id="content_end_message"><p>これより以前のツイートは存在しません。</p></div>
         <div id="loading">
             <div class="cssload-piano">
                     <div class="cssload-rect1"></div>
@@ -46,6 +47,5 @@
                     <div class="cssload-rect3"></div>
             </div>
         </div>
-        <div id="content_end_message"><p>これより以前のツイートは存在しません。</p></div>
     </div>
 </div>
