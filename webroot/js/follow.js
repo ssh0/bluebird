@@ -12,6 +12,9 @@ function follow() {
 
 function addfollow(id) {
   if (window.confirm('フォローに追加しますか？')) {
+    $('i#addfollow:' + id).attr({
+      'class': 'fa fa-spinner fa-spin fbutton'
+    });
     $.ajax({
       url: '/follows/addFollow/' + id,
       success: function() {
@@ -23,6 +26,9 @@ function addfollow(id) {
       },
       error: function() {
         alert("フォローへの追加に失敗しました。");
+        $('i#addfollow:' + id).attr({
+          'class': 'fa fa-user-plus fbutton'
+        });
       }
     });
   } else {
@@ -32,6 +38,9 @@ function addfollow(id) {
 
 function unfollow(id) {
   if (window.confirm('フォロー解除しますか？')) {
+    $('i#unfollow:' + id).attr({
+      'class': 'fa fa-spinner fa-spin fbutton'
+    });
     $.ajax({
       url: '/follows/unfollow/' + id,
       success: function() {
@@ -43,6 +52,9 @@ function unfollow(id) {
       },
       error: function() {
         alert("フォローの解除に失敗しました。");
+        $('i#unfollow:' + id).attr({
+          'class': 'fa fa-bell-splash-o fbutton'
+        });
       }
     });
   } else {

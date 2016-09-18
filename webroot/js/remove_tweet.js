@@ -5,6 +5,9 @@ function removeTweet() {
   $(document).on('click', 'div.tweet-removebutton', function () {
     if (window.confirm('このツイートを削除してよろしいですか？')) {
       var tweet_id = $(this).parents('div.tweet').attr('id');
+      $('div.tweet[id=' + tweet_id + ']').children('div.tweet-removebutton').children('i').attr({
+        'class': 'fa fa-spinner fa-spin'
+      });
       $.ajax({
         url: '/tweets/ajaxRemove/' + tweet_id,
         success: function() {
@@ -15,6 +18,9 @@ function removeTweet() {
         },
         error: function() {
           alert("ツイートの削除に失敗しました。");
+          $('div.tweet[id=' + tweet_id + ']').children('div.tweet-removebutton').children('i').attr({
+            'class': 'fa fa-trash-o'
+          });
         }
       });
     } else {
