@@ -28,6 +28,7 @@ $cakeDescription = 'Bluebird - twitter like toy app';
 
     <?= $this->Html->css('base.css') ?>
     <?= $this->Html->css('cake.css') ?>
+    <?= $this->Html->css('font-awesome-4.6.3/css/font-awesome.min.css') ?>
 
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"
         integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="
@@ -41,7 +42,7 @@ $cakeDescription = 'Bluebird - twitter like toy app';
     <nav class="top-bar expanded" data-topbar role="navigation">
         <ul class="title-area large-3 medium-4 columns">
             <li class="name">
-                <h1><?php echo $this->Html->link(
+            <h1> <?php echo $this->Html->link(
                     'Bluebird', [
                         'controller' => 'Tweets',
                         'action' => 'index',
@@ -51,7 +52,7 @@ $cakeDescription = 'Bluebird - twitter like toy app';
         <div class="top-bar-section">
             <ul class="right">
             <li><?php echo $this->Html->link(
-                'ホーム', [
+                 'ホーム', [
                     'controller' => 'Tweets',
                     'action' => 'index',
                 ]); ?></li>

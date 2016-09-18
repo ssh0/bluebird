@@ -104,6 +104,6 @@ qrpy8ar4esa4w3fkxk8013zctp7iiimcpcdiwlrkjxl7eeby8swv6igvp0cwjon0
 
 # Credit
 
-**icons** '[Essential Set](http://www.flaticon.com/packs/essential-set-2)': Designed by [Madebyoliver](http://www.flaticon.com/authors/madebyoliver) from [Flaticon](http://www.flaticon.com/).
+**icons** Font Awesome by Dave Gandy - [http://fontawesome.io](http://fontawesome.io)
 
 

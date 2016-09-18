@@ -1,6 +1,6 @@
 function follow() {
   // when #tweet_button is clicked
-  $(document).on('click', 'img.fbutton', function () {
+  $(document).on('click', 'i.fbutton', function () {
       var [toggle, id] = $(this).attr('id').split(':');
       if (toggle == 'addfollow') {
         addfollow(id);
@@ -15,11 +15,9 @@ function addfollow(id) {
     $.ajax({
       url: '/follows/addFollow/' + id,
       success: function() {
-        $('img#addfollow:' + id).attr({
+        $('i#addfollow:' + id).attr({
           'id': 'unfollow:' + id,
-          'src': '/img/hide-16.png',
-          'alt': 'フォロー解除',
-          'title': 'フォロー解除'
+          'class': 'fa fa-bell-slash-o fbutton'
         });
         location.reload();
       },
@@ -37,11 +35,9 @@ function unfollow(id) {
     $.ajax({
       url: '/follows/unfollow/' + id,
       success: function() {
-        $('img#unfollow:' + id).attr({
+        $('i#unfollow:' + id).attr({
           'id': 'addfollow:' + id,
-          'src': '/img/plus-16.png',
-          'alt': 'フォロー追加',
-          'title': 'フォロー追加'
+          'class': 'fa fa-user-plus fbutton'
         });
         location.reload();
       },
