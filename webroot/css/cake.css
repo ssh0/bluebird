@@ -850,7 +850,6 @@ div.message.hidden {
 #content_end_message {
     text-align: center;
     color: #626262;
-    display: none;
 }
 
 #loading {

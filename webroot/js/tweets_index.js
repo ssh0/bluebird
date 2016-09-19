@@ -9,11 +9,12 @@ function postTweet() {
       data: { content: $('#tweet_form [name=content]').val() },
       success: function(result) {
         $('#tweet_button').attr('disabled', false);
-        $('textarea').val('');
-        acceptNewTweets_();
-
-        var tweets_num = parseInt($('#profile-tweets-num').children('a').text());
-        $('#profile-tweets-num').children('a').text(tweets_num + 1);
+        if ($('textarea').val() != '') {
+          acceptNewTweets_();
+          var tweets_num = parseInt($('#profile-tweets-num').children('a').text());
+          $('#profile-tweets-num').children('a').text(tweets_num + 1);
+          $('textarea').val('');
+        }
       },
       error: function() {
         $('#tweet_button').attr('disabled', false);
@@ -78,22 +79,35 @@ function syncAllTweets_() {
 
 function lazyLoad() {
   var win = $(window);
+  var flag = false;
+  var endFlag = false;
+  var endMessage = $('#content_end_message');
+  endMessage.hide();
 
-  win.scroll(function() {
+  win.on('scroll', function() {
+    if (endFlag) {
+      return false;
+    }
+
     // Reached to end of the document?
     if ($(document).height() - win.height() == win.scrollTop()) {
-      $('#loading').show();
+      if (flag) {
+        return false;
+      }
 
+      flag = true;
+      $('#loading').fadeIn();
       $.ajax({
         url: '/tweets/ajaxLoadTweets/' + $('div.tweet').last().attr('id'),
         success: function(result) {
           if (result !== '') {
             $('div.tweets').append(result);
           } else {
-            $('#content_end_message').show();
+            endMessage.fadeIn();
+            endFlag = true;
           }
-
-            $('#loading').hide();
+          $('#loading').fadeOut();
+          flag = false;
         },
         error: function() {
           alert("Connection error");
