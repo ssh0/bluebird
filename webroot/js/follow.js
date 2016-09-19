@@ -1,5 +1,5 @@
 function follow() {
-  // when #tweet_button is clicked
+  // when #fbutton is clicked
   $(document).on('click', 'i.fbutton', function () {
       var [toggle, id] = $(this).attr('id').split(':');
       if (toggle == 'addfollow') {
