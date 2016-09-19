@@ -16,7 +16,7 @@ def create_follows_map(start_num=1, num_of_users=100, average_follows=20, pm=5):
 
         i = 0
         while i < max_follows:
-            to_user = random.randint(start_num, start_num + num_of_users)
+            to_user = random.randint(start_num, start_num + num_of_users - 1)
             if to_user == from_user:
                 continue
             else:
