@@ -20,6 +20,7 @@ $cakeDescription = 'Bluebird - twitter like toy app';
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="copyright" content="&copy; 2016 ssh0 (Shotaro Fujimoto) https://github.com/ssh0">
     <title>
         <?= $cakeDescription ?>:
         <?= $this->fetch('title') ?>
@@ -106,7 +107,5 @@ $cakeDescription = 'Bluebird - twitter like toy app';
     <div class="container clearfix">
         <?= $this->fetch('content') ?>
     </div>
-    <footer>
-    </footer>
 </body>
 </html>
