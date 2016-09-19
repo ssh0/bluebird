@@ -44,17 +44,60 @@ class UsersTable extends Table
         return $validator
             ->notEmpty('fullname', '名前が必要です。')
             ->lengthBetween('fullname', [4, 20], '名前は4〜20字としてください。')
+            ->add('fullname', 'fullnamePattern', [
+                'rule' => 'isValidFullname',
+                'message' => '名前は4〜20字とし，「-」、「_」以外の半角記号を使用することはできません。',
+                'provider' => 'table'
+            ])
             ->notEmpty('username', 'ユーザ名が必要です。')
-            ->lengthBetween('username', [4, 20], 'ユーザ名は4〜20字としてください。')
+            ->add('username', 'usernamePattern', [
+                'rule' => 'isValidUsername',
+                'message' => 'ユーザ名は4〜20字の半角英数字もしくは「-」、「_」で構成されている必要があります。',
+                'provider' => 'table'
+            ])
             ->notEmpty('password', 'パスワードが必要です。')
-            ->lengthBetween('password', [4, 8], 'パスワードは4〜8字としてください。')
-            ->alphaNumeric('password', 'パスワードは半角英数字だけで構成されている必要があります。')
+            ->add('password', 'passPattern', [
+                'rule' => 'isValidPassword',
+                'message' => 'パスワードは半角英数字(4〜8字)で構成されている必要があります。',
+                'provider' => 'table'
+            ])
             ->notEmpty('password2', '確認用パスワードが必要です。')
             ->sameAs('password2', 'password', '入力したパスワードが異なっています。')
             ->notEmpty('mail', 'メールアドレスが必要です。')
             ->email('mail', '正しいメールアドレスではありません。')
             ->allowEmpty('is_public')
-            ->boolean('is_public', 'ブール値ではない(普通表示されない)');
+            ->boolean('is_public', 'ブール値ではありません');
+    }
+
+    /**
+     * Validation rule for username
+     *
+     * @return boolean
+     */
+    public function isValidUsername($value)
+    {
+        return preg_match('/^[a-zA-Z0-9\-_]{4,20}$/', $value) == 1;
+    }
+
+    /**
+     * Validation rule for fullname
+     *
+     * @return boolean
+     */
+    public function isValidFullname($value)
+    {
+        return preg_match('/^[a-zA-Z0-9\-_ぁ-んァ-ヶー一-龠０-９、。]{4,20}$/u', $value) == 1;
+    }
+
+
+    /**
+     * Validation rule for password
+     *
+     * @return boolean
+     */
+    public function isValidPassword($value)
+    {
+        return preg_match('/^[a-zA-Z0-9]{4,8}$/', $value) == 1;
     }
 
     /**
